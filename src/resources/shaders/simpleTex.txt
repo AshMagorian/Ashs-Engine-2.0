@@ -1,0 +1,2 @@
+../src/resources/shaders/vertFragFiles/simpleTex.vert
+../src/resources/shaders/vertFragFiles/simpleTex.frag
