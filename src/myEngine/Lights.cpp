@@ -1,5 +1,3 @@
-#include "Lights.h"
-
 #include "myEngine.h"
 
 Lights::Lights()
@@ -19,5 +17,86 @@ void Lights::UpdateLightShaderValues()
 		(*i)->SetUniform("in_DirLight.ambient",m_directionalLight->ambient );
 		(*i)->SetUniform("in_DirLight.diffuse",m_directionalLight->diffuse );
 		(*i)->SetUniform("in_DirLight.specular",m_directionalLight->specular );
+
+		if (std::distance(m_pointLights.begin(), m_pointLights.end()) > 0)
+		{
+			for (std::list<std::shared_ptr<PointLight>>::iterator j = m_pointLights.begin(); j != m_pointLights.end(); ++j)
+			{
+				char buffer[64];
+				int index = std::distance(m_pointLights.begin(), j);
+
+				snprintf(buffer, sizeof(buffer), "in_PointLights[%i].position", index);
+				(*i)->SetUniform(buffer, (*j)->m_position);
+
+				snprintf(buffer, sizeof(buffer), "in_PointLights[%i].constant", index);
+				(*i)->SetUniform(buffer, (*j)->m_constant);
+
+				snprintf(buffer, sizeof(buffer), "in_PointLights[%i].linear", index);
+				(*i)->SetUniform(buffer, (*j)->m_linear);
+
+				snprintf(buffer, sizeof(buffer), "in_PointLights[%i].quadratic", index);
+				(*i)->SetUniform(buffer, (*j)->m_quadratic);
+
+				snprintf(buffer, sizeof(buffer), "in_PointLights[%i].ambient", index);
+				(*i)->SetUniform(buffer, (*j)->m_ambient);
+
+				snprintf(buffer, sizeof(buffer), "in_PointLights[%i].diffuse", index);
+				(*i)->SetUniform(buffer, (*j)->m_diffuse);
+
+				snprintf(buffer, sizeof(buffer), "in_PointLights[%i].specular", index);
+				(*i)->SetUniform(buffer, (*j)->m_specular);
+			}
+		}
+		if (std::distance(m_spotLights.begin(), m_spotLights.end()) > 0)
+		{
+			for (std::list<std::shared_ptr<SpotLight>>::iterator j = m_spotLights.begin(); j != m_spotLights.end(); ++j)
+			{
+
+				char buffer[64];
+				int index = std::distance(m_spotLights.begin(), j);
+
+				snprintf(buffer, sizeof(buffer), "in_SpotLights[%i].position", index);
+				(*i)->SetUniform(buffer, (*j)->m_position);
+
+				snprintf(buffer, sizeof(buffer), "in_SpotLights[%i].constant", index);
+				(*i)->SetUniform(buffer, (*j)->m_constant);
+
+				snprintf(buffer, sizeof(buffer), "in_SpotLights[%i].linear", index);
+				(*i)->SetUniform(buffer, (*j)->m_linear);
+
+				snprintf(buffer, sizeof(buffer), "in_SpotLights[%i].quadratic", index);
+				(*i)->SetUniform(buffer, (*j)->m_quadratic);
+
+				snprintf(buffer, sizeof(buffer), "in_SpotLights[%i].ambient", index);
+				(*i)->SetUniform(buffer, (*j)->m_ambient);
+
+				snprintf(buffer, sizeof(buffer), "in_SpotLights[%i].diffuse", index);
+				(*i)->SetUniform(buffer, (*j)->m_diffuse);
+
+				snprintf(buffer, sizeof(buffer), "in_SpotLights[%i].specular", index);
+				(*i)->SetUniform(buffer, (*j)->m_specular);
+
+				snprintf(buffer, sizeof(buffer), "in_SpotLights[%i].direction", index);
+				(*i)->SetUniform(buffer, (*j)->m_direction);
+
+				snprintf(buffer, sizeof(buffer), "in_SpotLights[%i].cutOff", index);
+				(*i)->SetUniform(buffer, (*j)->m_cutOff);
+
+				snprintf(buffer, sizeof(buffer), "in_SpotLights[%i].outerCutOff", index);
+				(*i)->SetUniform(buffer, (*j)->m_outerCutOff);
+			}
+		}
 	}
+}
+
+void Lights::AddPointLight(std::shared_ptr<Entity> _entity)
+{
+	std::shared_ptr<PointLight> rtn = _entity->GetComponent<PointLight>();
+	m_pointLights.push_back(rtn);
+}
+
+void Lights::AddSpotLight(std::shared_ptr<Entity> _entity)
+{
+	std::shared_ptr<SpotLight> rtn = _entity->GetComponent<SpotLight>();
+	m_spotLights.push_back(rtn);
 }

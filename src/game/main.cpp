@@ -23,6 +23,25 @@ int main(int argc, char *argv[])
 	application->GetResourceManager()->CreateMaterial("curuthersMat", application->GetResourceManager()->LoadFromResources<Texture>("../src/resources/textures/curuthers_diffuse.png"), 32.0f);
 	application->GetResourceManager()->CreateMaterial("yellowMat", application->GetResourceManager()->LoadFromResources<Texture>("../src/resources/textures/yellow.png"), 32.0f);
 	application->GetResourceManager()->CreateMaterial("orangeMat", application->GetResourceManager()->LoadFromResources<Texture>("../src/resources/textures/orange.png"), 32.0f);
+
+	//make point light
+	std::shared_ptr<Entity> pointLight = application->MakeCube();
+	pointLight->addComponent<PointLight>();
+	pointLight->GetTransform()->SetPos(glm::vec3(0.0f, 0.0f, 5.0f));
+	pointLight->GetTransform()->SetScale(glm::vec3(0.4f, 0.4f, 0.4f));
+
+	//make point light
+	std::shared_ptr<Entity> pointLight2 = application->MakeCube();
+	pointLight2->addComponent<PointLight>();
+	pointLight2->GetTransform()->SetPos(glm::vec3(-13.5f, 0.0f, 0.0f));
+	pointLight2->GetTransform()->SetScale(glm::vec3(0.4f, 0.4f, 0.4f));
+	
+	//make spot light
+	std::shared_ptr<Entity> spotLight = application->MakeCube();
+	spotLight->addComponent<SpotLight>();
+	spotLight->GetTransform()->SetPos(glm::vec3(6.0f, 4.0f, 0.0f));
+	spotLight->GetTransform()->SetScale(glm::vec3(0.4f, 0.4f, 0.4f));
+
 	/**
 	*Creates the spinning model in the middle of the level
 	*/

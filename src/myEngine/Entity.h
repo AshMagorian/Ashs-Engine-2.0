@@ -1,3 +1,6 @@
+#ifndef ENTITY_H
+#define ENTITY_H
+
 #include <memory>
 #include <list>
 #include <string>
@@ -89,3 +92,4 @@ public:
 	}
 
 };
+#endif
