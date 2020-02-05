@@ -8,6 +8,13 @@
 #include "Resource.h"
 #include "Exception.h"
 #include "Material.h"
+#include "Entity.h"
+
+struct Prefab
+{
+	std::string id;
+	Entity entity;
+};
 
 /**
 *The resources class Creates resources and then stores them in a list. This list can then be accessed to load multiple of the
@@ -17,6 +24,7 @@ class Resources
 {
 private:
 	std::list<std::shared_ptr<Resource>> m_resources; ///< The list of resources
+	std::list<Prefab> m_prefabs; ///< The list of prefabs
 
 public:
 
@@ -82,5 +90,8 @@ public:
 
 	std::shared_ptr<Material> CreateMaterial(std::string _name, std::shared_ptr<Texture> _diff, std::shared_ptr<Texture> _spec, float _shine);
 	std::shared_ptr<Material> CreateMaterial(std::string _name, std::shared_ptr<Texture> _diff, float _shine);
+
+	void CreatePrefab(std::string _id, std::shared_ptr<Entity> _entity);
+	std::shared_ptr<Entity> LoadPrefab(std::string _id);
 };
 #endif

@@ -51,3 +51,33 @@ std::shared_ptr<Material> Resources::CreateMaterial(std::string _name, std::shar
 	std::cout << _name << " created" << std::endl;
 	return material;
 }
+
+void Resources::CreatePrefab(std::string _id, std::shared_ptr<Entity> _entity)
+{
+	Prefab temp;
+	temp.id = _id;
+	temp.entity = *_entity;
+	m_prefabs.push_back(temp);
+}
+
+std::shared_ptr<Entity> Resources::LoadPrefab(std::string _id)
+{
+	try
+	{
+		std::shared_ptr<Entity> rtn;
+		for (std::list<Prefab>::iterator i = m_prefabs.begin(); i != m_prefabs.end(); ++i)
+		{
+			if ((*i).id == _id)
+			{
+				rtn = std::make_shared<Entity>((*i).entity);
+				return rtn;
+			}
+		}
+		throw Exception(_id + " cannot be loaded from Prefabs");
+	}
+	catch (Exception& e)
+	{
+		std::cout << "myEngine Exception: " << e.what() << std::endl;
+	}
+	return NULL;
+}

@@ -42,23 +42,14 @@ varying vec2 ex_TexCoord;
 varying vec3 ex_FragPos;
 varying vec3 ex_Normal;
 
-#define NR_POINT_LIGHTS 2
-#define NR_SPOT_LIGHTS 1
-
 uniform vec3 in_ViewPos;
 uniform DirLight in_DirLight;
 
-#if NR_POINT_LIGHTS > 0
-uniform PointLight in_PointLights[NR_POINT_LIGHTS];
-#else 
-uniform PointLight in_PointLights[1];
-#endif
+uniform int in_NoPointLights;
+uniform int in_NoSpotLights;
 
-#if NR_SPOT_LIGHTS > 0
-uniform SpotLight in_SpotLights[NR_SPOT_LIGHTS];
-#else 
-uniform SpotLight in_SpotLights[1];
-#endif
+uniform PointLight in_PointLights[50];
+uniform SpotLight in_SpotLights[50];
 
 uniform Material in_Material;
 
@@ -75,11 +66,11 @@ void main()
 
 
 	vec3 result = CalcDirLight(in_DirLight, norm, viewDir);
-	for(int i = 0; i < NR_POINT_LIGHTS; i++)
+	for(int i = 0; i < in_NoPointLights; i++)
 	{
 		result += CalcPointLight(in_PointLights[i], norm, ex_FragPos, viewDir); 
 	}
-	for (int i = 0; i < NR_SPOT_LIGHTS; i++)
+	for (int i = 0; i < in_NoSpotLights; i++)
 	{
 		result += CalcSpotLight(in_SpotLights[i], norm, ex_FragPos, viewDir);
 	}

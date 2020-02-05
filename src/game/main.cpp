@@ -27,8 +27,9 @@ int main(int argc, char *argv[])
 	//make point light
 	std::shared_ptr<Entity> pointLight = application->MakeCube();
 	pointLight->addComponent<PointLight>();
-	pointLight->GetTransform()->SetPos(glm::vec3(0.0f, 0.0f, 5.0f));
 	pointLight->GetTransform()->SetScale(glm::vec3(0.4f, 0.4f, 0.4f));
+	pointLight->GetTransform()->SetPos(glm::vec3(0.0f, 0.0f, 5.0f));
+	application->GetResourceManager()->CreatePrefab("pointlight", pointLight);
 
 	//make point light
 	std::shared_ptr<Entity> pointLight2 = application->MakeCube();

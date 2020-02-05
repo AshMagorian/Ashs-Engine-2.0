@@ -91,12 +91,36 @@ void Lights::UpdateLightShaderValues()
 
 void Lights::AddPointLight(std::shared_ptr<Entity> _entity)
 {
-	std::shared_ptr<PointLight> rtn = _entity->GetComponent<PointLight>();
-	m_pointLights.push_back(rtn);
+	try
+	{
+		if ((int)m_pointLights.size() > 49) { throw Exception("Point light not created, Can't have more than 50 point lights"); }
+		std::shared_ptr<PointLight> rtn = _entity->GetComponent<PointLight>();
+		m_pointLights.push_back(rtn);
+		for (std::list<std::shared_ptr<ShaderProgram>>::iterator i = m_shaderPrograms.begin(); i != m_shaderPrograms.end(); ++i)
+		{
+			(*i)->SetUniform("in_NoPointLights", (int)m_pointLights.size());
+		}
+	}
+	catch (Exception& e)
+	{
+		std::cout << "myEngine Exception: " << e.what() << std::endl;
+	}
 }
 
 void Lights::AddSpotLight(std::shared_ptr<Entity> _entity)
 {
-	std::shared_ptr<SpotLight> rtn = _entity->GetComponent<SpotLight>();
-	m_spotLights.push_back(rtn);
+	try
+	{
+		if ((int)m_spotLights.size() > 49) { throw Exception("Spotlight not created, Can't have more than 50 spotlights"); }
+		std::shared_ptr<SpotLight> rtn = _entity->GetComponent<SpotLight>();
+		m_spotLights.push_back(rtn);
+		for (std::list<std::shared_ptr<ShaderProgram>>::iterator i = m_shaderPrograms.begin(); i != m_shaderPrograms.end(); ++i)
+		{
+			(*i)->SetUniform("in_NoSpotLights", (int)m_spotLights.size());
+		}
+	}
+	catch (Exception& e)
+	{
+		std::cout << "myEngine Exception: " << e.what() << std::endl;
+	}
 }
