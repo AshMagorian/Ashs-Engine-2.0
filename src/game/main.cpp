@@ -14,15 +14,15 @@ int main(int argc, char *argv[])
 	/**
 	*Loads all of the resources into the resource manager
 	*/
-	application->GetResourceManager()->CreateResource<Texture>("../src/resources/textures/yellow.png");
-	application->GetResourceManager()->CreateResource<Texture>("../src/resources/textures/orange.png");
-	application->GetResourceManager()->CreateResource<Texture>("../src/resources/textures/curuthers_diffuse.png");
-	application->GetResourceManager()->CreateResource <VertexArray>("../src/resources/models/curuthers.obj");
-	application->GetResourceManager()->CreateResource<Sound>("../src/resources/audio/dixie_horn.ogg");
+	application->GetResourceManager()->CreateResource<Texture>("../src/resources/textures/yellow.png", "yellow_diffuse");
+	application->GetResourceManager()->CreateResource<Texture>("../src/resources/textures/orange.png", "orange_diffuse");
+	application->GetResourceManager()->CreateResource<Texture>("../src/resources/textures/curuthers_diffuse.png", "curuthers_diffuse");
+	application->GetResourceManager()->CreateResource <VertexArray>("../src/resources/models/curuthers.obj", "curuthers_obj");
+	application->GetResourceManager()->CreateResource<Sound>("../src/resources/audio/dixie_horn.ogg", "dixie_horn_ogg");
 
-	application->GetResourceManager()->CreateMaterial("curuthersMat", application->GetResourceManager()->LoadFromResources<Texture>("../src/resources/textures/curuthers_diffuse.png"), 32.0f);
-	application->GetResourceManager()->CreateMaterial("yellowMat", application->GetResourceManager()->LoadFromResources<Texture>("../src/resources/textures/yellow.png"), 32.0f);
-	application->GetResourceManager()->CreateMaterial("orangeMat", application->GetResourceManager()->LoadFromResources<Texture>("../src/resources/textures/orange.png"), 32.0f);
+	application->GetResourceManager()->CreateMaterial("curuthers_mat", application->GetResourceManager()->LoadFromResources<Texture>("curuthers_diffuse"), 32.0f);
+	application->GetResourceManager()->CreateMaterial("yellow_mat", application->GetResourceManager()->LoadFromResources<Texture>("yellow_diffuse"), 32.0f);
+	application->GetResourceManager()->CreateMaterial("orange_mat", application->GetResourceManager()->LoadFromResources<Texture>("orange_diffuse"), 32.0f);
 
 	//make point light
 	std::shared_ptr<Entity> pointLight = application->MakeCube();
@@ -31,12 +31,11 @@ int main(int argc, char *argv[])
 	pointLight->GetTransform()->SetPos(glm::vec3(0.0f, 0.0f, 5.0f));
 	application->GetResourceManager()->CreatePrefab("pointlight", pointLight);
 
-	//make point light
-	std::shared_ptr<Entity> pointLight2 = application->MakeCube();
-	pointLight2->addComponent<PointLight>();
+	//make second point light using the first as a reference
+	std::shared_ptr<Entity> pointLight2 = application->GetResourceManager()->LoadPrefab("pointlight");
 	pointLight2->GetTransform()->SetPos(glm::vec3(-13.5f, 0.0f, 0.0f));
-	pointLight2->GetTransform()->SetScale(glm::vec3(0.4f, 0.4f, 0.4f));
-	
+	pointLight2->GetComponent<Renderer>()->SetMaterial(application->GetResourceManager()->LoadFromResources<Material>("orange_mat"));
+
 	//make spot light
 	std::shared_ptr<Entity> spotLight = application->MakeCube();
 	spotLight->addComponent<SpotLight>();
@@ -48,9 +47,9 @@ int main(int argc, char *argv[])
 	*/
 	std::shared_ptr<Entity> model = application->addEntity();
 	model->addComponent<Renderer>();
-	model->GetComponent<Renderer>()->SetMesh(application->GetResourceManager()->LoadFromResources<VertexArray>("../src/resources/models/curuthers.obj"));
-	model->GetComponent<Renderer>()->SetMaterial(application->GetResourceManager()->LoadFromResources<Material>("curuthersMat"));
-	model->GetComponent<Renderer>()->SetShader(application->GetResourceManager()->LoadFromResources<ShaderProgram>("../src/resources/shaders/lightingShader.txt"));
+	model->GetComponent<Renderer>()->SetMesh(application->GetResourceManager()->LoadFromResources<VertexArray>("curuthers_obj"));
+	model->GetComponent<Renderer>()->SetMaterial(application->GetResourceManager()->LoadFromResources<Material>("curuthers_mat"));
+	model->GetComponent<Renderer>()->SetShader(application->GetResourceManager()->LoadFromResources<ShaderProgram>("lighting_shader"));
 	model->addComponent<BoxCollider>();
 	model->GetTransform()->SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	model->GetTransform()->SetPos(glm::vec3(0.0f, 0.1f, 0.0f));
@@ -61,14 +60,14 @@ int main(int argc, char *argv[])
 	*/
 	std::shared_ptr<Entity> farWall = application->MakeCube();
 	farWall->GetTransform()->SetPos(glm::vec3(0.0f, 0.0f, -15.0f));
-	farWall->GetComponent<Renderer>()->SetMaterial(application->GetResourceManager()->LoadFromResources<Material>("yellowMat"));
+	farWall->GetComponent<Renderer>()->SetMaterial(application->GetResourceManager()->LoadFromResources<Material>("yellow_mat"));
 	farWall->GetTransform()->SetScale(glm::vec3(15.0f, 1.0f, 1.0f));
 	farWall->addComponent<BoxCollider>();
 	/**
 	*Creates the back wall of the stage
 	*/
 	std::shared_ptr<Entity> backWall = application->MakeCube();
-	backWall->GetComponent<Renderer>()->SetMaterial(application->GetResourceManager()->LoadFromResources<Material>("yellowMat"));
+	backWall->GetComponent<Renderer>()->SetMaterial(application->GetResourceManager()->LoadFromResources<Material>("yellow_mat"));
 	backWall->GetTransform()->SetPos(glm::vec3(0.0f, 0.0f, 15.0f));
 	backWall->GetTransform()->SetScale(glm::vec3(15.0f, 1.0f, 1.0f));
 	backWall->addComponent<BoxCollider>();
@@ -90,7 +89,7 @@ int main(int argc, char *argv[])
 	*Creates the floor of the stage
 	*/
 	std::shared_ptr<Entity> floor = application->MakeCube();
-	floor->GetComponent<Renderer>()->SetMaterial(application->GetResourceManager()->LoadFromResources<Material>("orangeMat"));
+	floor->GetComponent<Renderer>()->SetMaterial(application->GetResourceManager()->LoadFromResources<Material>("orange_mat"));
 	floor->GetTransform()->SetPos(glm::vec3(0.0f, -1.5f, 0.0f));
 	floor->GetTransform()->SetScale(glm::vec3(15.0f, 0.5f, 15.0f));
 
@@ -106,7 +105,7 @@ int main(int argc, char *argv[])
 	/**
 	*Applies sound to the spinning model
 	*/
-	model->addComponent<SoundComponent>(application->GetResourceManager()->LoadFromResources<Sound>("../src/resources/audio/dixie_horn.ogg"));
+	model->addComponent<SoundComponent>(application->GetResourceManager()->LoadFromResources<Sound>("dixie_horn_ogg"));
 	model->addComponent<SoundToggle>();
 	/**
 	*Runs the game loop from application

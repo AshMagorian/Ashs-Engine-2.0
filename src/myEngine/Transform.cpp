@@ -1,5 +1,5 @@
 #include "Transform.h"
-
+#include "Entity.h"
 #include <glm/ext.hpp>
 
 /**
@@ -19,4 +19,9 @@ glm::mat4 Transform::GetModelMatrix()
 	m_model = glm::scale(m_model, m_scale);
 
 	return m_model;
+}
+
+bool Transform::Clone(std::shared_ptr<Entity> _entity)
+{
+	return true;
 }

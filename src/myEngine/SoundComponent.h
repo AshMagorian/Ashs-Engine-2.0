@@ -31,5 +31,7 @@ public:
 	*\brief toggles the isPlaying bool
 	*/
 	void SetIsPlaying(bool _val) { m_isPlaying = _val;}
+
+	bool Clone(std::shared_ptr<Entity> _entity);
 };
 #endif

@@ -54,6 +54,8 @@ public:
 	*/
 	glm::mat4 GetModelMatrix();
 
+	bool Clone(std::shared_ptr<Entity> _entity);
+
 protected:
 	glm::mat4 m_model; ///< The model matrix
 };

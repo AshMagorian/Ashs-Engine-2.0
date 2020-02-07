@@ -68,15 +68,15 @@ std::shared_ptr<Application> const Application::init()
 		{
 			throw Exception("Resource manager not loaded"); 
 		}
-		app->GetResourceManager()->CreateResource<VertexArray>("../src/myEngine/engineRes/Cube.obj");
-		app->GetResourceManager()->CreateResource<ShaderProgram>("../src/resources/shaders/simpleTex.txt");
-		app->GetResourceManager()->CreateResource<ShaderProgram>("../src/resources/shaders/lightingShader.txt");
-		app->GetResourceManager()->CreateResource<Texture>("../src/myEngine/engineRes/Grey.png");
-		app->GetResourceManager()->CreateMaterial("defaultMaterial", app->GetResourceManager()->LoadFromResources<Texture>("../src/myEngine/engineRes/Grey.png"), 32.0f);
+		app->GetResourceManager()->CreateResource<VertexArray>("../src/myEngine/engineRes/Cube.obj", "cube_obj");
+		app->GetResourceManager()->CreateResource<ShaderProgram>("../src/resources/shaders/simpleTex.txt", "simple_shader");
+		app->GetResourceManager()->CreateResource<ShaderProgram>("../src/resources/shaders/lightingShader.txt", "lighting_shader");
+		app->GetResourceManager()->CreateResource<Texture>("../src/myEngine/engineRes/Grey.png", "grey_diffuse");
+		app->GetResourceManager()->CreateMaterial("default_mat", app->GetResourceManager()->LoadFromResources<Texture>("grey_diffuse"), 32.0f);
 	}
 	catch (Exception& e) { std::cout << "myEngine Exception: " << e.what() << std::endl; }
 
-	app->GetLightManager()->AddShaderProgram(app->GetResourceManager()->LoadFromResources<ShaderProgram>("../src/resources/shaders/lightingShader.txt"));
+	app->GetLightManager()->AddShaderProgram(app->GetResourceManager()->LoadFromResources<ShaderProgram>("lighting_shader"));
 
 	return app;
 }
@@ -199,9 +199,9 @@ std::shared_ptr<Entity> Application::MakeCube()
 	entity->self = entity;
 	entity->application = self;
 	entity->transform = entity->addComponent<Transform>();
-	entity->addComponent<Renderer>(m_resourceManager->LoadFromResources<ShaderProgram>("../src/resources/shaders/lightingShader.txt"),
-									m_resourceManager->LoadFromResources<VertexArray>("../src/myEngine/engineRes/Cube.obj"),
-									m_resourceManager->LoadFromResources<Material>("defaultMaterial"));
+	entity->addComponent<Renderer>(m_resourceManager->LoadFromResources<ShaderProgram>("lighting_shader"),
+									m_resourceManager->LoadFromResources<VertexArray>("cube_obj"),
+									m_resourceManager->LoadFromResources<Material>("default_mat"));
 	entities.push_back(entity);
 	return entity;
 }

@@ -52,3 +52,9 @@ void SoundComponent::Play()
 
 	alSourcePlay(sourceId);
 }
+
+bool SoundComponent::Clone(std::shared_ptr<Entity> _entity)
+{
+	std::shared_ptr<SoundComponent> tmp = _entity->addComponent<SoundComponent>(m_soundSource);
+	return true;
+}

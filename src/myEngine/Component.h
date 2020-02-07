@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <iostream>
 
 class Entity;
 class Application;
@@ -24,6 +25,9 @@ public:
 	*\brief A shortcut to return the Application 
 	*/
 	std::shared_ptr<Application> getApplication();
+
+	virtual bool Clone(std::shared_ptr<Entity> _entity) { return false; }
+
 private:
 	std::weak_ptr<Entity> entity; ///< a reference to the entity which owns this component
 	bool began; ///< Determines if onBegin should run

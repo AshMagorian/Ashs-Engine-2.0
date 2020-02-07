@@ -46,5 +46,14 @@ public:
 	}
 	void SetAttenuation(float _const, float _lin, float _quad) { m_constant = _const; m_linear = _lin; m_quadratic = _quad; }
 	void SetLighting(glm::vec3 _ambient, glm::vec3 _diffuse, glm::vec3 _specular) { m_ambient = _ambient; m_diffuse = _diffuse; m_specular = _specular; }
+	
+	bool Clone(std::shared_ptr<Entity> _entity)
+	{
+		std::shared_ptr<SpotLight> tmp = _entity->addComponent<SpotLight>();
+
+		tmp->SetAttenuation(m_constant, m_linear, m_quadratic);
+		tmp->SetLighting(m_ambient, m_diffuse, m_specular);
+		return true;
+	}
 };
 #endif

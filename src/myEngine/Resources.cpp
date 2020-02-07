@@ -3,6 +3,7 @@
 #include "VertexArray.h"
 #include "ShaderProgram.h"
 #include "Texture.h"
+#include "Entity.h"
 
 Resources::Resources()
 {
@@ -38,7 +39,7 @@ std::shared_ptr<Material> Resources::CreateMaterial(std::string _name, std::shar
 	{
 		material = std::make_shared<Material>();
 		material->SetDiffuse(_diff);
-		material->SetSpecular(LoadFromResources<Texture>("../src/myEngine/engineRes/Grey.png"));
+		material->SetSpecular(LoadFromResources<Texture>("grey_diffuse"));
 		material->SetShininess(_shine);
 	}
 	catch (Exception& e)
@@ -47,6 +48,7 @@ std::shared_ptr<Material> Resources::CreateMaterial(std::string _name, std::shar
 		return NULL;
 	}
 	material->SetPath(_name);
+	material->SetName(_name);
 	m_resources.push_back(material);
 	std::cout << _name << " created" << std::endl;
 	return material;
@@ -58,6 +60,7 @@ void Resources::CreatePrefab(std::string _id, std::shared_ptr<Entity> _entity)
 	temp.id = _id;
 	temp.entity = *_entity;
 	m_prefabs.push_back(temp);
+	std::cout << _id << " saved to prefabs" << std::endl;
 }
 
 std::shared_ptr<Entity> Resources::LoadPrefab(std::string _id)
@@ -70,6 +73,8 @@ std::shared_ptr<Entity> Resources::LoadPrefab(std::string _id)
 			if ((*i).id == _id)
 			{
 				rtn = std::make_shared<Entity>((*i).entity);
+				rtn = rtn->Clone();
+				std::cout << _id << " loaded from prefabs" << std::endl;
 				return rtn;
 			}
 		}

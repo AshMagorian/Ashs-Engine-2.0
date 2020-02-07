@@ -18,7 +18,6 @@ private:
 
 	std::shared_ptr<ShaderProgram> m_shaderProgram; ///< The shader program which will be used to draw the model
 	std::shared_ptr<VertexArray> m_va; ///< The model to be drawn
-	//std::shared_ptr<Texture> m_tex; ///< the texture of the model
 	std::shared_ptr<Material> m_material; ///< the material of the model
 	std::shared_ptr<Camera> m_mainCamera; ///< The main camera of the scene
 
@@ -61,4 +60,6 @@ public:
 	void SetShader(std::shared_ptr<ShaderProgram> _shader) { m_shaderProgram = _shader; }
 
 	std::shared_ptr<Material> GetMaterial() { return m_material; }
+
+	bool Clone(std::shared_ptr<Entity> _entity);
 };

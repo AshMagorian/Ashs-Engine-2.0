@@ -91,5 +91,7 @@ public:
 		return transform.lock();
 	}
 
+	std::shared_ptr<Entity> Clone();
+
 };
 #endif

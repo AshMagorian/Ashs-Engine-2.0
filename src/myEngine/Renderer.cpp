@@ -44,10 +44,20 @@ void Renderer::onDisplay()
 	if (m_shaderProgram && m_material && m_va)
 	{
 		m_shaderProgram->SetUniform("in_Model", getEntity()->GetTransform()->GetModelMatrix());
-		//m_shaderProgram->SetUniform("in_Texture", m_material->GetDiffuse());
 		m_shaderProgram->SetUniform("in_Material.diffuse", m_material->GetDiffuse());
 		m_shaderProgram->SetUniform("in_Material.specular", m_material->GetSpecular());
 		m_shaderProgram->SetUniform("in_Material.shininess", m_material->GetShininess());
 		m_shaderProgram->Draw(m_va);
 	}
+}
+
+bool Renderer::Clone(std::shared_ptr<Entity> _entity)
+{
+	std::shared_ptr<Renderer> tmp = _entity->addComponent<Renderer>();
+	tmp->SetMaterial(m_material);
+	tmp->SetMesh(m_va);
+	tmp->SetShader(m_shaderProgram);
+
+	return true;
+
 }

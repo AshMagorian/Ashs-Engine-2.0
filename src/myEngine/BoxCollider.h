@@ -41,4 +41,6 @@ public:
 	*\brief Sets the size value
 	*/
 	void SetSize(glm::vec3 _size) {m_size = _size;}
+
+	bool Clone(std::shared_ptr<Entity> _entity);
 };

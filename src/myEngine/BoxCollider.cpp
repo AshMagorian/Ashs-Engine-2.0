@@ -140,3 +140,12 @@ glm::vec3 BoxCollider::GetCollisionResponse(glm::vec3 _position, glm::vec3 _size
 
 	return _position;
 }
+
+bool BoxCollider::Clone(std::shared_ptr<Entity> _entity)
+{
+	std::shared_ptr<BoxCollider> tmp = _entity->addComponent<BoxCollider>();
+
+	tmp->SetSize(m_size);
+	tmp->SetOffset(m_offset);
+	return true;
+}

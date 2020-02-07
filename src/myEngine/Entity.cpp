@@ -1,6 +1,7 @@
 #include "Entity.h"
 #include "Application.h"
 #include "Component.h"
+#include "Transform.h"
 
 Entity::Entity()
 {
@@ -36,4 +37,29 @@ void Entity::display()
 	{
 		(*i)->onDisplay();
 	}
+}
+
+std::shared_ptr<Entity> Entity::Clone()
+{
+	std::shared_ptr<Entity> rtn = getApplication()->addEntity();
+
+	rtn->GetTransform()->SetPos(this->GetTransform()->GetPos());
+	rtn->GetTransform()->SetRotation(this->GetTransform()->GetRotation());
+  	rtn->GetTransform()->SetScale(this->GetTransform()->GetScale());
+
+
+	for (std::list<std::shared_ptr<Component>>::iterator i = components.begin(); i != components.end(); ++i)
+	{
+
+		if ((*i)->Clone(rtn) == false)
+		{
+			//std::shared_ptr<Component> tmp;
+			//(tmp) = (*i);
+			//rtn->GetComponents().push_back(tmp);
+			//tmp->onInit();
+
+			//std::cout << "Component not cloned!" << std::endl;
+		}
+	}
+	return rtn;
 }
