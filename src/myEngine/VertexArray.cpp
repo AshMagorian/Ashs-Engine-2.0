@@ -71,6 +71,31 @@ VertexArray::VertexArray()
 		throw std::exception();
 	}
 
+	std::vector<glm::vec3> positions;
+	std::vector<glm::vec2> texCoords;
+
+	positions.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	positions.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	positions.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
+
+	positions.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
+	positions.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
+	positions.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+
+	texCoords.push_back(glm::vec2(0.0f, 1.0f));
+	texCoords.push_back(glm::vec2(1.0f, 0.0f));
+	texCoords.push_back(glm::vec2(0.0f, 0.0f));
+					
+	texCoords.push_back(glm::vec2(0.0f, 1.0f));
+	texCoords.push_back(glm::vec2(1.0f, 1.0f));
+	texCoords.push_back(glm::vec2(1.0f, 0.0f));
+
+	std::shared_ptr<VertexBuffer> positionBuffer = NULL;
+	std::shared_ptr<VertexBuffer> texCoordBuffer = NULL;
+
+	SetBuffer("in_Position", positionBuffer);
+	if (texCoordBuffer) SetBuffer("in_TexCoord", texCoordBuffer);
+
 }
 /**
 *\brief Reads the model file and stores the data

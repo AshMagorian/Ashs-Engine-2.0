@@ -73,6 +73,8 @@ add_library(myEngine
 	src/myEngine/Lights.cpp
 	src/myEngine/PointLight.h
 	src/myEngine/SpotLight.h
+	src/myEngine/SpriteRenderer.h
+	src/myEngine/SpriteRenderer.cpp
 )	
 
 if(MSVC)
