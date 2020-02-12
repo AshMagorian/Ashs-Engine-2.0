@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
 	application->GetResourceManager()->CreateResource<Texture>("../src/resources/textures/yellow.png", "yellow_diffuse");
 	application->GetResourceManager()->CreateResource<Texture>("../src/resources/textures/orange.png", "orange_diffuse");
 	application->GetResourceManager()->CreateResource<Texture>("../src/resources/textures/curuthers_diffuse.png", "curuthers_diffuse");
+	application->GetResourceManager()->CreateResource<Texture>("../src/resources/textures/mimikyu.jpg", "mimikyu");
 	application->GetResourceManager()->CreateResource <VertexArray>("../src/resources/models/curuthers.obj", "curuthers_obj");
 	application->GetResourceManager()->CreateResource<Sound>("../src/resources/audio/dixie_horn.ogg", "dixie_horn_ogg");
 
@@ -41,6 +42,11 @@ int main(int argc, char *argv[])
 	spotLight->addComponent<SpotLight>();
 	spotLight->GetTransform()->SetPos(glm::vec3(6.0f, 4.0f, 0.0f));
 	spotLight->GetTransform()->SetScale(glm::vec3(0.4f, 0.4f, 0.4f));
+
+	std::shared_ptr<Entity> mimikyu = application->addEntity();
+	mimikyu->addComponent<SpriteRenderer>(application->GetResourceManager()->LoadFromResources<Texture>("mimikyu"));
+	mimikyu->GetTransform()->SetPos(glm::vec3(2.0f, 0.1f, 0.0f));
+
 
 	/**
 	*Creates the spinning model in the middle of the level

@@ -24,6 +24,6 @@
 #include "Lights.h"
 #include "PointLight.h"
 #include "SpotLight.h"
-
+#include "SpriteRenderer.h"
 
 #endif

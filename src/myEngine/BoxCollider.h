@@ -1,3 +1,6 @@
+#ifndef BOXCOLLIDER_H
+#define BOXCOLLIDER_H
+
 #include "Component.h"
 #include <glm/glm.hpp>
 /**
@@ -44,3 +47,4 @@ public:
 
 	bool Clone(std::shared_ptr<Entity> _entity);
 };
+#endif

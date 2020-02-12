@@ -71,30 +71,27 @@ VertexArray::VertexArray()
 		throw std::exception();
 	}
 
-	std::vector<glm::vec3> positions;
-	std::vector<glm::vec2> texCoords;
+	std::shared_ptr<VertexBuffer> positions = std::make_shared<VertexBuffer>();
+	std::shared_ptr<VertexBuffer> texCoords = std::make_shared<VertexBuffer>();
 
-	positions.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-	positions.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
-	positions.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
+	positions->add(glm::vec3(0.0f, 1.0f, 0.0f));
+	positions->add(glm::vec3(1.0f, 0.0f, 0.0f));
+	positions->add(glm::vec3(0.0f, 0.0f, 0.0f));
+	
+	positions->add(glm::vec3(0.0f, 1.0f, 0.0f));
+	positions->add(glm::vec3(1.0f, 1.0f, 0.0f));
+	positions->add(glm::vec3(1.0f, 0.0f, 0.0f));
+		
+	texCoords->add(glm::vec2(0.0f, 1.0f));
+	texCoords->add(glm::vec2(1.0f, 0.0f));
+	texCoords->add(glm::vec2(0.0f, 0.0f));
 
-	positions.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
-	positions.push_back(glm::vec3(1.0f, 1.0f, 0.0f));
-	positions.push_back(glm::vec3(1.0f, 0.0f, 0.0f));
+	texCoords->add(glm::vec2(0.0f, 1.0f));
+	texCoords->add(glm::vec2(1.0f, 1.0f));
+	texCoords->add(glm::vec2(1.0f, 0.0f));
 
-	texCoords.push_back(glm::vec2(0.0f, 1.0f));
-	texCoords.push_back(glm::vec2(1.0f, 0.0f));
-	texCoords.push_back(glm::vec2(0.0f, 0.0f));
-					
-	texCoords.push_back(glm::vec2(0.0f, 1.0f));
-	texCoords.push_back(glm::vec2(1.0f, 1.0f));
-	texCoords.push_back(glm::vec2(1.0f, 0.0f));
-
-	std::shared_ptr<VertexBuffer> positionBuffer = NULL;
-	std::shared_ptr<VertexBuffer> texCoordBuffer = NULL;
-
-	SetBuffer("in_Position", positionBuffer);
-	if (texCoordBuffer) SetBuffer("in_TexCoord", texCoordBuffer);
+	SetBuffer("in_Position", positions);
+	if (texCoords) SetBuffer("in_TexCoord", texCoords);
 
 }
 /**
