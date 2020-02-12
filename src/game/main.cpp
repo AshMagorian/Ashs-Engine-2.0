@@ -17,13 +17,22 @@ int main(int argc, char *argv[])
 	application->GetResourceManager()->CreateResource<Texture>("../src/resources/textures/yellow.png", "yellow_diffuse");
 	application->GetResourceManager()->CreateResource<Texture>("../src/resources/textures/orange.png", "orange_diffuse");
 	application->GetResourceManager()->CreateResource<Texture>("../src/resources/textures/curuthers_diffuse.png", "curuthers_diffuse");
-	application->GetResourceManager()->CreateResource<Texture>("../src/resources/textures/mimikyu.jpg", "mimikyu");
+	application->GetResourceManager()->CreateResource<Texture>("../src/resources/textures/mimikyu.png", "mimikyu");
 	application->GetResourceManager()->CreateResource <VertexArray>("../src/resources/models/curuthers.obj", "curuthers_obj");
 	application->GetResourceManager()->CreateResource<Sound>("../src/resources/audio/dixie_horn.ogg", "dixie_horn_ogg");
 
 	application->GetResourceManager()->CreateMaterial("curuthers_mat", application->GetResourceManager()->LoadFromResources<Texture>("curuthers_diffuse"), 32.0f);
 	application->GetResourceManager()->CreateMaterial("yellow_mat", application->GetResourceManager()->LoadFromResources<Texture>("yellow_diffuse"), 32.0f);
 	application->GetResourceManager()->CreateMaterial("orange_mat", application->GetResourceManager()->LoadFromResources<Texture>("orange_diffuse"), 32.0f);
+
+	/**
+	*Creates the camera snd sets it up
+	*/
+	std::shared_ptr<Entity> firstPersonCamera = application->addEntity();
+	firstPersonCamera->addComponent<Camera_FirstPerson>();
+	firstPersonCamera->GetTransform()->SetPos(glm::vec3(0.0f, 0.0f, 10.0f));
+	application->GetCamera()->SetCurrentCamera(firstPersonCamera);
+	firstPersonCamera->addComponent<BoxCollider>();
 
 	//make point light
 	std::shared_ptr<Entity> pointLight = application->MakeCube();
@@ -42,11 +51,6 @@ int main(int argc, char *argv[])
 	spotLight->addComponent<SpotLight>();
 	spotLight->GetTransform()->SetPos(glm::vec3(6.0f, 4.0f, 0.0f));
 	spotLight->GetTransform()->SetScale(glm::vec3(0.4f, 0.4f, 0.4f));
-
-	std::shared_ptr<Entity> mimikyu = application->addEntity();
-	mimikyu->addComponent<SpriteRenderer>(application->GetResourceManager()->LoadFromResources<Texture>("mimikyu"));
-	mimikyu->GetTransform()->SetPos(glm::vec3(2.0f, 0.1f, 0.0f));
-
 
 	/**
 	*Creates the spinning model in the middle of the level
@@ -99,14 +103,13 @@ int main(int argc, char *argv[])
 	floor->GetTransform()->SetPos(glm::vec3(0.0f, -1.5f, 0.0f));
 	floor->GetTransform()->SetScale(glm::vec3(15.0f, 0.5f, 15.0f));
 
-	/**
-	*Creates the camera snd sets it up
-	*/
-	std::shared_ptr<Entity> firstPersonCamera = application->addEntity();
-	firstPersonCamera->addComponent<Camera_FirstPerson>();
-	firstPersonCamera->GetTransform()->SetPos(glm::vec3(0.0f, 0.0f, 10.0f));
-	application->GetCamera()->SetCurrentCamera(firstPersonCamera);
-	firstPersonCamera->addComponent<BoxCollider>();
+	//make billboard
+	std::shared_ptr<Entity> mimikyu = application->addEntity();
+	mimikyu->addComponent<SpriteRenderer>(application->GetResourceManager()->LoadFromResources<Texture>("mimikyu"), true);
+	mimikyu->GetTransform()->SetPos(glm::vec3(2.0f, -1.0f, 0.0f));
+	//mimikyu->GetTransform()->SetRotation(glm::vec3(180.0f, 180.0f, 0.0f));
+	mimikyu->GetTransform()->SetScale(glm::vec3(3.0f, 3.0f, 3.0f));
+	//mimikyu->addComponent<SpinComponent>();
 
 	/**
 	*Applies sound to the spinning model

@@ -13,24 +13,37 @@ void SpriteRenderer::onInit()
 {
 	m_va = std::make_shared<VertexArray>();
 	m_shaderProgram = getApplication()->GetResourceManager()->LoadFromResources<ShaderProgram>("simple_shader");
+	m_mainCamera = getApplication()->GetCamera()->GetCurrentCamera();
+	getEntity()->GetTransform()->IsSprite();
+	m_isBillboard = false;
 }
 
-void SpriteRenderer::onInit(std::shared_ptr<Texture> _tex)
+void SpriteRenderer::onInit(std::shared_ptr<Texture> _tex, bool _isBillboard)
 {
 	m_va = std::make_shared<VertexArray>();
 	m_shaderProgram = getApplication()->GetResourceManager()->LoadFromResources<ShaderProgram>("simple_shader");
 	m_tex = _tex;
+	getEntity()->GetTransform()->IsSprite();	
+	m_isBillboard = _isBillboard;
+	m_mainCamera = getApplication()->GetCamera()->GetCurrentCamera();
 }
 
-void SpriteRenderer::onInit(std::shared_ptr<ShaderProgram> _shader, std::shared_ptr<Texture> _tex)
+void SpriteRenderer::onInit(std::shared_ptr<ShaderProgram> _shader, std::shared_ptr<Texture> _tex, bool _isBillboard)
 {
 	m_va = std::make_shared<VertexArray>();
 	m_shaderProgram = _shader;
 	m_tex = _tex;
+	m_mainCamera = getApplication()->GetCamera()->GetCurrentCamera();
+	getEntity()->GetTransform()->IsSprite();
+	m_isBillboard = _isBillboard;
 }
 
 void SpriteRenderer::onTick()
 {
+	if (m_isBillboard)
+	{
+		getEntity()->GetTransform()->SetRotation(glm::vec3(m_mainCamera->GetTransform()->GetRotation().x + 180.0f, m_mainCamera->GetTransform()->GetRotation().y, m_mainCamera->GetTransform()->GetRotation().z));
+	}
 	if (m_shaderProgram)
 	{
 		m_shaderProgram->SetUniform("in_Projection", getApplication()->GetCamera()->GetProjectionMatrix());

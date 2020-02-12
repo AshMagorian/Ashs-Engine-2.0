@@ -78,6 +78,14 @@ std::shared_ptr<Application> const Application::init()
 
 	app->GetLightManager()->AddShaderProgram(app->GetResourceManager()->LoadFromResources<ShaderProgram>("lighting_shader"));
 
+	/**
+	*\brief Makes sure only the nearest faces of objects are drawn
+	*/
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	return app;
 }
 /**
@@ -102,11 +110,7 @@ void Application::run()
 		*\brief Dynamically sets the window width and height every frame
 		*/
 		SDL_GetWindowSize(window, &windowWidth, &windowHeight); 
-		/**
-		*\brief Makes sure only the nearest faces of objects are drawn
-		*/
-		glEnable(GL_CULL_FACE);
-		glEnable(GL_DEPTH_TEST);
+
 
 		/**
 		*\brief Updates the state of the input object

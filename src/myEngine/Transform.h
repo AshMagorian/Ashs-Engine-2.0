@@ -14,10 +14,15 @@ private:
 	glm::vec3 m_rotation = glm::vec3(0.0f, 0.0f, 0.0f);///< The rotation of the entity
 	glm::vec3 m_scale = glm::vec3(1.0f, 1.0f, 1.0f); ///< The scale of the entity
 
+	bool m_isSprite = false;
+
 public:
 
 	Transform() {}
 	~Transform() {}
+
+	void onTick();
+
 	/**
 	*\brief Returns the position
 	*/
@@ -27,11 +32,7 @@ public:
 	*/
 	glm::vec3 GetRotation() 
 	{
-		if (m_rotation.x < 360.0f && m_rotation.x > -360.0f && m_rotation.y < 360.0f && m_rotation.y > -360.0f && m_rotation.z < 360.0f && m_rotation.z > -360.0f)
-		{
-			return m_rotation;
-		}
-		return glm::vec3(0.0f, 0.0f, 0.0f);
+		return m_rotation;
 	}
 	/**
 	*\brief Returns the scale
@@ -53,6 +54,8 @@ public:
 	*\brief Calculates and returns the model matrix
 	*/
 	glm::mat4 GetModelMatrix();
+
+	void IsSprite() { m_isSprite = true; }
 
 	bool Clone(std::shared_ptr<Entity> _entity);
 

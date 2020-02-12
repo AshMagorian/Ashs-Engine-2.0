@@ -7,5 +7,5 @@ void SpinComponent::onBegin()
 
 void SpinComponent::onTick()
 {
-	m_transform->SetRotation(glm::vec3(0.0f, m_transform->GetRotation().y +(m_spinSpeed * getApplication()->GetDeltaTime()) , 0.0f));
+	m_transform->SetRotation(glm::vec3(m_transform->GetRotation().x, m_transform->GetRotation().y + (m_spinSpeed * getApplication()->GetDeltaTime()), m_transform->GetRotation().z));
 } 
