@@ -70,29 +70,6 @@ VertexArray::VertexArray()
 	{
 		throw std::exception();
 	}
-
-	std::shared_ptr<VertexBuffer> positions = std::make_shared<VertexBuffer>();
-	std::shared_ptr<VertexBuffer> texCoords = std::make_shared<VertexBuffer>();
-
-	positions->add(glm::vec3(0.0f, 1.0f, 0.0f));
-	positions->add(glm::vec3(1.0f, 0.0f, 0.0f));
-	positions->add(glm::vec3(0.0f, 0.0f, 0.0f));
-	
-	positions->add(glm::vec3(0.0f, 1.0f, 0.0f));
-	positions->add(glm::vec3(1.0f, 1.0f, 0.0f));
-	positions->add(glm::vec3(1.0f, 0.0f, 0.0f));
-		
-	texCoords->add(glm::vec2(0.0f, 1.0f));
-	texCoords->add(glm::vec2(1.0f, 0.0f));
-	texCoords->add(glm::vec2(0.0f, 0.0f));
-
-	texCoords->add(glm::vec2(0.0f, 1.0f));
-	texCoords->add(glm::vec2(1.0f, 1.0f));
-	texCoords->add(glm::vec2(1.0f, 0.0f));
-
-	SetBuffer("in_Position", positions);
-	if (texCoords) SetBuffer("in_TexCoord", texCoords);
-
 }
 /**
 *\brief Reads the model file and stores the data
@@ -197,6 +174,32 @@ VertexArray::VertexArray(std::string path)
 	if (texCoordBuffer) SetBuffer("in_TexCoord", texCoordBuffer);
 	if (normalBuffer) SetBuffer("in_Normal", normalBuffer);
 }
+
+void VertexArray::MakeSprite()
+{
+	std::shared_ptr<VertexBuffer> positions = std::make_shared<VertexBuffer>();
+	std::shared_ptr<VertexBuffer> texCoords = std::make_shared<VertexBuffer>();
+
+	positions->add(glm::vec3(0.0f, 1.0f, 0.0f));
+	positions->add(glm::vec3(1.0f, 0.0f, 0.0f));
+	positions->add(glm::vec3(0.0f, 0.0f, 0.0f));
+
+	positions->add(glm::vec3(0.0f, 1.0f, 0.0f));
+	positions->add(glm::vec3(1.0f, 1.0f, 0.0f));
+	positions->add(glm::vec3(1.0f, 0.0f, 0.0f));
+
+	texCoords->add(glm::vec2(0.0f, 1.0f));
+	texCoords->add(glm::vec2(1.0f, 0.0f));
+	texCoords->add(glm::vec2(0.0f, 0.0f));
+
+	texCoords->add(glm::vec2(0.0f, 1.0f));
+	texCoords->add(glm::vec2(1.0f, 1.0f));
+	texCoords->add(glm::vec2(1.0f, 0.0f));
+
+	SetBuffer("in_Position", positions);
+	if (texCoords) SetBuffer("in_TexCoord", texCoords);
+}
+
 /**
 *\brief Stores a buffer into the vector. It's position in teh vector depends on it's attrbute which is passed through
 */
@@ -249,10 +252,10 @@ GLuint VertexArray::GetId()
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, buffers.at(i)->GetId());
 
+				glEnableVertexAttribArray(i);
+
 				glVertexAttribPointer(i, buffers.at(i)->GetComponents(), GL_FLOAT, GL_FALSE,
 					buffers.at(i)->GetComponents() * sizeof(GLfloat), (void *)0);
-
-				glEnableVertexAttribArray(i);
 			}
 			else
 			{

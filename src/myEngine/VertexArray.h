@@ -30,6 +30,8 @@ public:
 	*\brief Reads the model file and stores the data
 	*/
 	VertexArray(std::string path);
+
+	void MakeSprite();
 	/**
 	*\brief Stores a buffer into the vector. It's position in teh vector depends on it's attrbute which is passed through
 	*/

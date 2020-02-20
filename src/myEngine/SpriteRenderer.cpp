@@ -12,6 +12,7 @@ SpriteRenderer::~SpriteRenderer()
 void SpriteRenderer::onInit()
 {
 	m_va = std::make_shared<VertexArray>();
+	m_va->MakeSprite();
 	m_shaderProgram = getApplication()->GetResourceManager()->LoadFromResources<ShaderProgram>("simple_shader");
 	m_mainCamera = getApplication()->GetCamera()->GetCurrentCamera();
 	getEntity()->GetTransform()->IsSprite();
@@ -21,6 +22,7 @@ void SpriteRenderer::onInit()
 void SpriteRenderer::onInit(std::shared_ptr<Texture> _tex, bool _isBillboard)
 {
 	m_va = std::make_shared<VertexArray>();
+	m_va->MakeSprite();
 	m_shaderProgram = getApplication()->GetResourceManager()->LoadFromResources<ShaderProgram>("simple_shader");
 	m_tex = _tex;
 	getEntity()->GetTransform()->IsSprite();	
@@ -31,6 +33,7 @@ void SpriteRenderer::onInit(std::shared_ptr<Texture> _tex, bool _isBillboard)
 void SpriteRenderer::onInit(std::shared_ptr<ShaderProgram> _shader, std::shared_ptr<Texture> _tex, bool _isBillboard)
 {
 	m_va = std::make_shared<VertexArray>();
+	m_va->MakeSprite();
 	m_shaderProgram = _shader;
 	m_tex = _tex;
 	m_mainCamera = getApplication()->GetCamera()->GetCurrentCamera();
