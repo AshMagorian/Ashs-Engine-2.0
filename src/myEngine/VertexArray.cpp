@@ -200,6 +200,24 @@ void VertexArray::MakeSprite()
 	if (texCoords) SetBuffer("in_TexCoord", texCoords);
 }
 
+void VertexArray::MakeParticles(int _maxParticles)
+{
+	std::shared_ptr<VertexBuffer> billboardVertex = std::make_shared<VertexBuffer>();
+	billboardVertex->add(glm::vec3(-0.5f, -0.5f, 0.0f));
+	billboardVertex->add(glm::vec3(0.5f, -0.5f, 0.0f));
+	billboardVertex->add(glm::vec3(-0.5f, 0.5f, 0.0f));
+	billboardVertex->add(glm::vec3(0.5f, 0.5f, 0.0f));
+
+	std::shared_ptr<VertexBuffer> particlePositions = std::make_shared<VertexBuffer>();
+	particlePositions->ParticleBufferInit(_maxParticles);
+	std::shared_ptr<VertexBuffer> particleColour = std::make_shared<VertexBuffer>();
+	particleColour->ParticleBufferInit(_maxParticles);
+
+	SetBuffer("in_Position", billboardVertex);
+	SetBuffer("in_Particles_Position", particlePositions);
+	SetBuffer("in_Particles_Color", particleColour);
+}
+
 /**
 *\brief Stores a buffer into the vector. It's position in teh vector depends on it's attrbute which is passed through
 */
@@ -221,6 +239,14 @@ void VertexArray::SetBuffer(std::string attribute, std::shared_ptr<VertexBuffer>
 	else if (attribute == "in_Normal")
 	{
 		buffers.at(3) = buffer;
+	}
+	else if (attribute == "in_Particles_Position")
+	{
+		buffers.at(4) = buffer;
+	}
+	else if (attribute == "in_Particles_Color")
+	{
+		buffers.at(5) = buffer;
 	}
 	else
 	{
@@ -270,3 +296,59 @@ GLuint VertexArray::GetId()
 	return id;
 }
 
+GLuint VertexArray::GetParticlesId(int _maxParticles, int _particlesCount, std::vector<float> _positionData, std::vector<float> _colourData)
+{
+	for (size_t i = 0; i < buffers.size(); i++)
+	{
+		if (buffers.at(i))
+		{
+			if (i == 4) // particle position
+			{
+				glBindBuffer(GL_ARRAY_BUFFER, buffers.at(i)->GetParticleBufferId(_maxParticles, _particlesCount, _positionData));
+				glEnableVertexAttribArray(i);
+				glVertexAttribPointer(
+					i, // attribute
+					buffers.at(i)->GetComponents(), 
+					GL_FLOAT, // type
+					GL_FALSE, // normalized?
+					buffers.at(i)->GetComponents() * sizeof(GLfloat), // stride
+					(void*)0 // array buffer offset
+				);
+				glVertexAttribDivisor(i, 1); // positions : one per quad (its center) -> 1
+			}
+			else if (i == 5) // particle colour
+			{
+				glBindBuffer(GL_ARRAY_BUFFER, buffers.at(i)->GetParticleBufferId(_maxParticles, _particlesCount, _colourData));
+				glEnableVertexAttribArray(i);
+				glVertexAttribPointer(
+					i, // attribute
+					buffers.at(i)->GetComponents(), // size 
+					GL_UNSIGNED_BYTE, // type
+					GL_TRUE, // normalized?
+					buffers.at(i)->GetComponents() * sizeof(GLfloat), // stride
+					(void*)0 // array buffer offset
+				);
+				glVertexAttribDivisor(i, 1); // color : one per quad -> 1
+			}
+			else
+			{
+				glBindBuffer(GL_ARRAY_BUFFER, buffers.at(i)->GetId());
+
+				glEnableVertexAttribArray(i);
+
+				glVertexAttribPointer(i, buffers.at(i)->GetComponents(), GL_FLOAT, GL_FALSE,
+					buffers.at(i)->GetComponents() * sizeof(GLfloat), (void *)0);
+				glVertexAttribDivisor(i, 0);
+			}
+		}
+		else
+		{
+			glDisableVertexAttribArray(i);
+		}
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+	return id;
+}

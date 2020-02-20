@@ -36,6 +36,7 @@ public:
 	*\brief draws the vertex array to the screen
 	*/
 	void Draw(std::shared_ptr<VertexArray> vertexArray);
+	void DrawParticles(std::shared_ptr<VertexArray> vertexArray, int _maxParticles, int _particlesCount, std::vector<float> _positionData, std::vector<float> _colourData);
 	/**
 	*\brief Sets the uniform value to be passed into the shader files
 	*/

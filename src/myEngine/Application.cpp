@@ -71,6 +71,7 @@ std::shared_ptr<Application> const Application::init()
 		app->GetResourceManager()->CreateResource<VertexArray>("../src/myEngine/engineRes/Cube.obj", "cube_obj");
 		app->GetResourceManager()->CreateResource<ShaderProgram>("../src/resources/shaders/simpleTex.txt", "simple_shader");
 		app->GetResourceManager()->CreateResource<ShaderProgram>("../src/resources/shaders/lightingShader.txt", "lighting_shader");
+		app->GetResourceManager()->CreateResource<ShaderProgram>("../src/resources/shaders/particleShader.txt", "particle_shader");
 		app->GetResourceManager()->CreateResource<Texture>("../src/myEngine/engineRes/Grey.png", "grey_diffuse");
 		app->GetResourceManager()->CreateMaterial("default_mat", app->GetResourceManager()->LoadFromResources<Texture>("grey_diffuse"), 32.0f);
 	}

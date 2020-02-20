@@ -18,6 +18,8 @@ private:
 public:
 	VertexBuffer();
 
+	void ParticleBufferInit(int _maxParticles);
+
 	void add(glm::vec2 value);
 	void add(glm::vec3 value);
 	void add(glm::vec4 value);
@@ -25,6 +27,7 @@ public:
 	int GetComponents() { return VBcomponents; }
 	int GetDataSize() { return data.size(); }
 	GLuint GetId();
+	GLuint GetParticleBufferId(int _maxParticles, int _particlesCount, std::vector<float> _data);
 };
 
 #endif

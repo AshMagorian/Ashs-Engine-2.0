@@ -109,6 +109,8 @@ ShaderProgram::ShaderProgram(std::string _path)
 	glBindAttribLocation(id, 1, "in_Color");
 	glBindAttribLocation(id, 2, "in_TexCoord");
 	glBindAttribLocation(id, 3, "in_Normal");
+	glBindAttribLocation(id, 4, "in_Particles_Position");
+	glBindAttribLocation(id, 5, "in_Particles_Color");
 
 	// Perform the link and check for faliure
 	glLinkProgram(id);
@@ -155,6 +157,17 @@ void ShaderProgram::Draw(std::shared_ptr<VertexArray> vertexArray)
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
+	// Reset the state
+	glBindVertexArray(0);
+	glUseProgram(0);
+}
+
+void ShaderProgram::DrawParticles(std::shared_ptr<VertexArray> vertexArray, int _maxParticles, int _particlesCount, std::vector<float> _positionData, std::vector<float> _colourData)
+{
+	// Instruct OpenGL to use our shader program and our VAO
+	glUseProgram(id);
+	glBindVertexArray(vertexArray->GetParticlesId(_maxParticles, _particlesCount, _positionData, _colourData));
+	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, _particlesCount);
 	// Reset the state
 	glBindVertexArray(0);
 	glUseProgram(0);

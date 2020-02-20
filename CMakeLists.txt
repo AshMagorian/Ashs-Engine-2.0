@@ -75,6 +75,8 @@ add_library(myEngine
 	src/myEngine/SpotLight.h
 	src/myEngine/SpriteRenderer.h
 	src/myEngine/SpriteRenderer.cpp
+	src/myEngine/ParticleSystem.h
+	src/myEngine/ParticleSystem.cpp
 )	
 
 if(MSVC)

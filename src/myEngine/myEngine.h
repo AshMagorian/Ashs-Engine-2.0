@@ -25,5 +25,6 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "SpriteRenderer.h"
+#include "ParticleSystem.h"
 
 #endif

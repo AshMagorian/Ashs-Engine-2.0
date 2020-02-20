@@ -32,12 +32,14 @@ public:
 	VertexArray(std::string path);
 
 	void MakeSprite();
+	void MakeParticles(int _maxParticles);
 	/**
 	*\brief Stores a buffer into the vector. It's position in teh vector depends on it's attrbute which is passed through
 	*/
 	void SetBuffer(std::string attribute, std::shared_ptr<VertexBuffer> buffer);
 	int GetVertexCount();
 	GLuint GetId();
+	GLuint GetParticlesId(int _maxParticles, int _particlesCount, std::vector<float> _positionData, std::vector<float> _colourData);
 
 };
 #endif

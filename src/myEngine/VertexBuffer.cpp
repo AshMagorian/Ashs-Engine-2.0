@@ -13,6 +13,13 @@ VertexBuffer::VertexBuffer()
 	}
 }
 
+void VertexBuffer::ParticleBufferInit(int _maxParticles)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, id);
+	glBufferData(GL_ARRAY_BUFFER, _maxParticles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 void VertexBuffer::add(glm::vec2 value)
 {
 	if (VBcomponents != 2 && VBcomponents != 0)
@@ -65,5 +72,14 @@ GLuint VertexBuffer::GetId()
 		dirty = false;
 	}
 
+	return id;
+}
+
+GLuint VertexBuffer::GetParticleBufferId(int _maxParticles, int _particlesCount,  std::vector<float> _data)
+{
+	glBindBuffer(GL_ARRAY_BUFFER, id);
+	glBufferData(GL_ARRAY_BUFFER, _maxParticles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW); // Buffer orphaning
+	glBufferSubData(GL_ARRAY_BUFFER, 0, _particlesCount * sizeof(GLfloat) * 4, &_data.at(0));
+	VBcomponents = 4;
 	return id;
 }
