@@ -167,9 +167,30 @@ void ShaderProgram::DrawParticles(std::shared_ptr<VertexArray> vertexArray, int 
 	// Instruct OpenGL to use our shader program and our VAO
 	glUseProgram(id);
 	glBindVertexArray(vertexArray->GetParticlesId(_maxParticles, _particlesCount, _positionData, _colourData));
+
+	glVertexAttribDivisor(0, 0);
+	glVertexAttribDivisor(4, 1);
+	glVertexAttribDivisor(5, 1);
 	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, _particlesCount);
+
+	//std::cout << _particlesCount << std::endl;
+
 	// Reset the state
 	glBindVertexArray(0);
+	glUseProgram(0);
+}
+
+void ShaderProgram::SetUniform(std::string uniform, glm::vec2 value)
+{
+	GLint uniformId = glGetUniformLocation(id, uniform.c_str());
+
+	if (uniformId == -1)
+	{
+		throw std::exception();
+	}
+
+	glUseProgram(id);
+	glUniform2f(uniformId, value.x, value.y);
 	glUseProgram(0);
 }
 

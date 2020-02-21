@@ -13,7 +13,7 @@ struct Particle
 	glm::vec3 pos, speed;
 	float r, g, b, a;
 	float size, angle, weight;
-	float life;
+	float life = -1.0f;
 
 };
 
@@ -23,8 +23,8 @@ private:
 	int m_maxParticles;
 	std::vector<Particle> m_particlesContainer;
 	int m_lastUsedParticle = 0;
-	int m_particlesCount;
-	float m_delta;
+	int m_particlesCount = 0;
+	float m_delta = 0.0f;
 
 	std::vector<float> m_positionData;
 	std::vector<float> m_colourData;

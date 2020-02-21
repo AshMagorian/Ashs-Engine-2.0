@@ -9,12 +9,12 @@
 class Environment
 {
 private:
-	unsigned int m_currentTime; ///< current time used for calculating deltaTime
-	unsigned int m_lastTime; ///< the previous time used for calculating deltaTime
-	float m_deltaTime ; ///< Used to make all movement relative to the framerate
+	unsigned int m_currentTime = 0; ///< current time used for calculating deltaTime
+	unsigned int m_lastTime = 0 ; ///< the previous time used for calculating deltaTime
+	float m_deltaTime = 0.0f; ///< Used to make all movement relative to the framerate
 
 public:
-	Environment::Environment() {}
+	Environment::Environment() { }
 	/**
 	*\brief Calculates DeltaTime at the start of each frame
 	*/

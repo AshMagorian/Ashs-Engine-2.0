@@ -106,10 +106,13 @@ int main(int argc, char *argv[])
 	//make billboard
 	std::shared_ptr<Entity> mimikyu = application->addEntity();
 	mimikyu->addComponent<SpriteRenderer>(application->GetResourceManager()->LoadFromResources<Texture>("mimikyu"), true);
-	mimikyu->GetTransform()->SetPos(glm::vec3(2.0f, -1.0f, 0.0f));
-	//mimikyu->GetTransform()->SetRotation(glm::vec3(180.0f, 180.0f, 0.0f));
-	mimikyu->GetTransform()->SetScale(glm::vec3(3.0f, 3.0f, 3.0f));
-	//mimikyu->addComponent<SpinComponent>();
+	mimikyu->GetTransform()->SetPos(glm::vec3(3.0f, 0.0f, 0.0f));
+	mimikyu->GetTransform()->SetScale(glm::vec3(2.0f, 2.0f, 2.0f));
+
+	//make partile system
+	std::shared_ptr<Entity> particles = application->addEntity();
+	particles->addComponent<ParticleSystem>(600);
+	particles->GetTransform()->SetPos(glm::vec3(-2.0f, 0.3f, 0.0f));
 
 	/**
 	*Applies sound to the spinning model

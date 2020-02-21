@@ -180,21 +180,21 @@ void VertexArray::MakeSprite()
 	std::shared_ptr<VertexBuffer> positions = std::make_shared<VertexBuffer>();
 	std::shared_ptr<VertexBuffer> texCoords = std::make_shared<VertexBuffer>();
 
-	positions->add(glm::vec3(0.0f, 1.0f, 0.0f));
-	positions->add(glm::vec3(1.0f, 0.0f, 0.0f));
-	positions->add(glm::vec3(0.0f, 0.0f, 0.0f));
-
-	positions->add(glm::vec3(0.0f, 1.0f, 0.0f));
-	positions->add(glm::vec3(1.0f, 1.0f, 0.0f));
-	positions->add(glm::vec3(1.0f, 0.0f, 0.0f));
-
-	texCoords->add(glm::vec2(0.0f, 1.0f));
-	texCoords->add(glm::vec2(1.0f, 0.0f));
-	texCoords->add(glm::vec2(0.0f, 0.0f));
+	positions->add(glm::vec3(-0.5f, -0.5f, 0.0f)); // Top left
+	positions->add(glm::vec3(0.5f, -0.5f, 0.0f)); // Top right
+	positions->add(glm::vec3(-0.5f, 0.5f, 0.0f)); // bottom left
+	
+	positions->add(glm::vec3(0.5f, -0.5f, 0.0f)); // top right
+	positions->add(glm::vec3(0.5f, 0.5f, 0.0f)); // bottom right
+	positions->add(glm::vec3(-0.5f, 0.5f, 0.0f)); // bottom left
 
 	texCoords->add(glm::vec2(0.0f, 1.0f));
 	texCoords->add(glm::vec2(1.0f, 1.0f));
+	texCoords->add(glm::vec2(0.0f, 0.0f));
+
+	texCoords->add(glm::vec2(1.0f, 1.0f));
 	texCoords->add(glm::vec2(1.0f, 0.0f));
+	texCoords->add(glm::vec2(0.0f, 0.0f));
 
 	SetBuffer("in_Position", positions);
 	if (texCoords) SetBuffer("in_TexCoord", texCoords);

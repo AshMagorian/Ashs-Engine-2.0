@@ -17,6 +17,8 @@ private:
 
 	std::shared_ptr<Entity> m_mainCamera; ///< The main camera of the scene
 
+	float m_size = 1.0f;
+
 	bool m_isBillboard = false;
 public:
 	SpriteRenderer();

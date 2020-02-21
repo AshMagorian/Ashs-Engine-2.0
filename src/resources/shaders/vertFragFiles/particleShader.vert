@@ -16,7 +16,7 @@ void main()
 	vec3 (in_Particle_Position.x, in_Particle_Position.y, in_Particle_Position.z) 
 	+ CameraRight_worldspace * in_Position.x * in_Particle_Position.w
 	+ CameraUp_worldspace * in_Position.y * in_Particle_Position.w;
-	
+
 	gl_Position = in_Projection * in_View * in_Model * vec4(newPosition, 1.0);
 	ex_Particle_Color = in_Particle_Color;
 }
