@@ -80,6 +80,7 @@ GLuint VertexBuffer::GetParticleBufferId(int _maxParticles, int _particlesCount,
 	glBindBuffer(GL_ARRAY_BUFFER, id);
 	glBufferData(GL_ARRAY_BUFFER, _maxParticles * 4 * sizeof(GLfloat), NULL, GL_STREAM_DRAW); // Buffer orphaning
 	glBufferSubData(GL_ARRAY_BUFFER, 0, _particlesCount * sizeof(GLfloat) * 4, &_data.at(0));
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	VBcomponents = 4;
 	return id;
 }

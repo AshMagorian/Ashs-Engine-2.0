@@ -298,6 +298,7 @@ GLuint VertexArray::GetId()
 
 GLuint VertexArray::GetParticlesId(int _maxParticles, int _particlesCount, std::vector<float> _positionData, std::vector<float> _colourData)
 {
+	glBindVertexArray(id);
 	for (size_t i = 0; i < buffers.size(); i++)
 	{
 		if (buffers.at(i))
@@ -305,6 +306,7 @@ GLuint VertexArray::GetParticlesId(int _maxParticles, int _particlesCount, std::
 			if (i == 4) // particle position
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, buffers.at(i)->GetParticleBufferId(_maxParticles, _particlesCount, _positionData));
+				
 				glEnableVertexAttribArray(i);
 				glVertexAttribPointer(
 					i, // attribute
@@ -319,6 +321,7 @@ GLuint VertexArray::GetParticlesId(int _maxParticles, int _particlesCount, std::
 			else if (i == 5) // particle colour
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, buffers.at(i)->GetParticleBufferId(_maxParticles, _particlesCount, _colourData));
+				
 				glEnableVertexAttribArray(i);
 				glVertexAttribPointer(
 					i, // attribute

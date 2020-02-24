@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
 	//make partile system
 	std::shared_ptr<Entity> particles = application->addEntity();
 	particles->addComponent<ParticleSystem>(600);
-	particles->GetTransform()->SetPos(glm::vec3(-2.0f, 0.3f, 0.0f));
+	particles->GetTransform()->SetPos(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	/**
 	*Applies sound to the spinning model
