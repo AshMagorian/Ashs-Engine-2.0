@@ -6,7 +6,7 @@ class SpinComponent : public Component
 {
 private:
 
-	float m_spinSpeed = 50;
+	float m_spinSpeed = 50.0;
 	std::shared_ptr<Transform> m_transform;
 
 public:

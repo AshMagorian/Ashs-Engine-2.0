@@ -1,5 +1,8 @@
 #include <myEngine/myEngine.h>
 
+#include <cstdlib>
+#include <ctime>
+
 void ParticleSystem::onInit(int _maxParticles)
 {
 	m_maxParticles = _maxParticles;
@@ -9,24 +12,12 @@ void ParticleSystem::onInit(int _maxParticles)
 	m_particlesVA->MakeParticles(m_maxParticles);
 
 	m_shaderProgram = getApplication()->GetResourceManager()->LoadFromResources<ShaderProgram>("particle_shader");
-
-	test = getApplication()->addEntity();
-	test->addComponent<SpriteRenderer>(getApplication()->GetResourceManager()->LoadFromResources<Texture>("yellow_diffuse"), true);
-	test->GetTransform()->SetPos(glm::vec3(-2.0f, 0.3f, 0.0f));
-
-	test2 = getApplication()->addEntity();
-	test2->addComponent<SpriteRenderer>(getApplication()->GetResourceManager()->LoadFromResources<Texture>("yellow_diffuse"), true);
-	test2->GetTransform()->SetPos(glm::vec3(-2.0f, 0.3f, 0.0f));
-
-	test3 = getApplication()->addEntity();
-	test3->addComponent<SpriteRenderer>(getApplication()->GetResourceManager()->LoadFromResources<Texture>("yellow_diffuse"), true);
-	test3->GetTransform()->SetPos(glm::vec3(-2.0f, 0.3f, 0.0f));
 }
 
 void ParticleSystem::onTick()
 {
-	//m_delta = getApplication()->GetDeltaTime();
-	m_delta = 0.016f;
+	m_delta = getApplication()->GetDeltaTime();
+	//m_delta = 0.016f;
 	//std::cout << "delta: " << m_delta << std::endl;
 
 	m_shaderProgram->SetUniform("in_Projection", getApplication()->GetCamera()->GetProjectionMatrix());
@@ -42,17 +33,24 @@ void ParticleSystem::onTick()
 	//Creates the specified number of particles every frame
 	for (int i = 0; i < newParticles; i++)
 	{
+		float rndm = ((static_cast<float> (rand()) / static_cast<float> (RAND_MAX)) - 0.5) * 2;
+		float rndm2 = ((static_cast<float> (rand()) / static_cast<float> (RAND_MAX)) - 0.5) * 2;
+
 		int j = FindUnusedParticle();
-		//std::cout << j << std::endl;
+
 		m_particlesContainer[j].pos = getEntity()->GetTransform()->GetPos();
-		m_particlesContainer[j].speed = glm::vec3(0.0f,5.0f, 0.0f);
+		m_particlesContainer[j].speed = glm::vec3(rndm * 3 ,7.0f, rndm2 * 3);
 
-		m_particlesContainer[j].r = 0.0f;
-		m_particlesContainer[j].g = 1.0f;
-		m_particlesContainer[j].b = 0.0f;
-		m_particlesContainer[j].a = 1.0f;
+		rndm = (static_cast<float> (rand()) / static_cast<float> (RAND_MAX));
 
-		m_particlesContainer[j].size = 0.3f;
+		m_particlesContainer[j].r = rndm;
+		rndm = (static_cast<float> (rand()) / static_cast<float> (RAND_MAX));
+		m_particlesContainer[j].g = rndm;
+		rndm = (static_cast<float> (rand()) / static_cast<float> (RAND_MAX));
+		m_particlesContainer[j].b = rndm;
+		m_particlesContainer[j].a = 0.7f;
+
+		m_particlesContainer[j].size = 0.2f;
 		
 		m_particlesContainer[j].life = 2.0f;
 		
@@ -60,10 +58,6 @@ void ParticleSystem::onTick()
 
 	m_positionData.clear();
 	m_colourData.clear();
-
-	//m_positionData.resize(m_maxParticles * 4);
-	//m_colourData.resize(m_maxParticles * 4);
-
 
 	m_particlesCount = 0;
 	for (int i = 0; i < m_maxParticles; i++)
@@ -89,18 +83,6 @@ void ParticleSystem::onTick()
 				m_colourData.push_back(p.g);
 				m_colourData.push_back(p.b);
 				m_colourData.push_back(p.a);
-
-				//m_positionData[4 * m_particlesCount + 0] = p.pos.x;
-				//m_positionData[4 * m_particlesCount + 1] = p.pos.y;
-				//m_positionData[4 * m_particlesCount + 2] = p.pos.z;
-				//				  
-				//m_positionData[4 * m_particlesCount + 3] = p.size;
-				// 
-				//m_colourData[4 * m_particlesCount + 0] = p.r;
-				//m_colourData[4 * m_particlesCount + 1] = p.g;
-				//m_colourData[4 * m_particlesCount + 2] = p.b;
-				//m_colourData[4 * m_particlesCount + 3] = p.a;
-
 			}
 			else
 			{
@@ -109,29 +91,10 @@ void ParticleSystem::onTick()
 			m_particlesCount++;
 		}
 	}
-	if (m_particlesCount > 50)
-	{
-		test->GetTransform()->SetPos(m_particlesContainer[50].pos);
-	}
-	if (m_particlesCount > 150)
-	{
-		test2->GetTransform()->SetPos(m_particlesContainer[150].pos);
-	}
-	if (m_particlesCount > 250)
-	{
-		test3->GetTransform()->SetPos(m_particlesContainer[250].pos);
-	}
-
-	std::cout << "particle: " << m_particlesContainer[150].pos.x << ", " << m_particlesContainer[150].pos.y << ", " << m_particlesContainer[150].pos.z << std::endl;
-	std::cout << "test: " << test2->GetTransform()->GetPos().x << ", " << test2->GetTransform()->GetPos().y << ", " << test2->GetTransform()->GetPos().z << std::endl;
-	//std::cout << m_particlesCount << std::endl;
 }
 
 void ParticleSystem::onDisplay()
 {
-	m_shaderProgram->SetUniform("in_Model", getEntity()->GetTransform()->GetModelMatrix());
-	
-	//std::cout << m_positionData[4] << ", " << m_positionData[5] << ", " << m_positionData[6] << ", life " << m_particlesContainer[1].life << std::endl;
 	m_shaderProgram->DrawParticles(m_particlesVA, m_maxParticles, m_particlesCount, m_positionData, m_colourData);
 }
 

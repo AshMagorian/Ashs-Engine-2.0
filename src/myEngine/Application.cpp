@@ -39,6 +39,13 @@ std::shared_ptr<Application> const Application::init()
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
 	
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+
+
+
 	try { if (!SDL_GL_CreateContext(app->window)) { throw Exception("Window couldn't be created"); } }
 	catch (Exception& e) { std::cout << "myEngine Exception: " << e.what() << std::endl; }
 

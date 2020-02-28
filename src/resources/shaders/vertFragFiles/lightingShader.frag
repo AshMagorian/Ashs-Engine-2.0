@@ -1,3 +1,5 @@
+#version 430 core
+
 struct Material
 {
 	sampler2D diffuse;

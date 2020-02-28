@@ -216,6 +216,13 @@ void VertexArray::MakeParticles(int _maxParticles)
 	SetBuffer("in_Position", billboardVertex);
 	SetBuffer("in_Particles_Position", particlePositions);
 	SetBuffer("in_Particles_Color", particleColour);
+
+	glBindVertexArray(id);
+	glBindBuffer(GL_ARRAY_BUFFER, buffers.at(0)->GetId());
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, buffers.at(0)->GetComponents(), GL_FLOAT, GL_FALSE,
+		buffers.at(0)->GetComponents() * sizeof(GLfloat), (void *)0);
+	glVertexAttribDivisor(0, 0); // one per vertex
 }
 
 /**
@@ -296,6 +303,7 @@ GLuint VertexArray::GetId()
 	return id;
 }
 
+
 GLuint VertexArray::GetParticlesId(int _maxParticles, int _particlesCount, std::vector<float> _positionData, std::vector<float> _colourData)
 {
 	glBindVertexArray(id);
@@ -303,45 +311,47 @@ GLuint VertexArray::GetParticlesId(int _maxParticles, int _particlesCount, std::
 	{
 		if (buffers.at(i))
 		{
-			if (i == 4) // particle position
+			if (i == 4) // attribute number for particle position
 			{
+				//Updates the particle positions and binds the buffer
 				glBindBuffer(GL_ARRAY_BUFFER, buffers.at(i)->GetParticleBufferId(_maxParticles, _particlesCount, _positionData));
-				
+			
 				glEnableVertexAttribArray(i);
 				glVertexAttribPointer(
 					i, // attribute
-					buffers.at(i)->GetComponents(), 
+					4, 
 					GL_FLOAT, // type
 					GL_FALSE, // normalized?
-					buffers.at(i)->GetComponents() * sizeof(GLfloat), // stride
+					0, // stride
 					(void*)0 // array buffer offset
 				);
-				glVertexAttribDivisor(i, 1); // positions : one per quad (its center) -> 1
+				glVertexAttribDivisor(i, 1); // positions : one per quad (its center) 
 			}
-			else if (i == 5) // particle colour
+			else if (i == 5) // attribute number for particle colour
 			{
+				//Updates the particle colour and binds the buffer
 				glBindBuffer(GL_ARRAY_BUFFER, buffers.at(i)->GetParticleBufferId(_maxParticles, _particlesCount, _colourData));
-				
+			
 				glEnableVertexAttribArray(i);
 				glVertexAttribPointer(
 					i, // attribute
-					buffers.at(i)->GetComponents(), // size 
-					GL_UNSIGNED_BYTE, // type
-					GL_TRUE, // normalized?
-					buffers.at(i)->GetComponents() * sizeof(GLfloat), // stride
+					4, // size 
+					GL_FLOAT, // type
+					GL_FALSE, // normalized?
+					0, // stride
 					(void*)0 // array buffer offset
 				);
-				glVertexAttribDivisor(i, 1); // color : one per quad -> 1
+				glVertexAttribDivisor(i, 1); // color : one per quad 
 			}
 			else
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, buffers.at(i)->GetId());
-
+				
 				glEnableVertexAttribArray(i);
-
+				
 				glVertexAttribPointer(i, buffers.at(i)->GetComponents(), GL_FLOAT, GL_FALSE,
 					buffers.at(i)->GetComponents() * sizeof(GLfloat), (void *)0);
-				glVertexAttribDivisor(i, 0);
+				glVertexAttribDivisor(i, 0); // one per vertex
 			}
 		}
 		else
@@ -355,3 +365,56 @@ GLuint VertexArray::GetParticlesId(int _maxParticles, int _particlesCount, std::
 
 	return id;
 }
+
+/*
+GLuint VertexArray::GetParticlesId(int _maxParticles, int _particlesCount, std::vector<float> _positionData, std::vector<float> _colourData)
+{
+	glBindVertexArray(id);
+
+	//Vertexes
+	
+	//glBindBuffer(GL_ARRAY_BUFFER, buffers.at(0)->GetId());
+	//glEnableVertexAttribArray(0);
+	//glVertexAttribPointer(0, buffers.at(0)->GetComponents(), GL_FLOAT, GL_FALSE,
+	//	buffers.at(0)->GetComponents() * sizeof(GLfloat), (void *)0);
+	//glVertexAttribDivisor(0, 0); // one per vertex
+	
+	//Particle positions
+
+	glBindBuffer(GL_ARRAY_BUFFER, buffers.at(4)->GetParticleBufferId(_maxParticles, _particlesCount, _positionData));
+	glBufferData(GL_ARRAY_BUFFER, _maxParticles * 4 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, _particlesCount * sizeof(GLfloat) * 4, &_positionData.at(0));
+
+	glVertexAttribPointer(
+		4, // attribute
+		4,
+		GL_FLOAT, // type
+		GL_FALSE, // normalized?
+		0, // stride
+		(void*)0 // array buffer offset
+	);	glEnableVertexAttribArray(4);
+	glVertexAttribDivisor(4, 1); // positions : one per quad (its center) 
+
+	//Particle colours
+
+	glBindBuffer(GL_ARRAY_BUFFER, buffers.at(5)->GetParticleBufferId(_maxParticles, _particlesCount, _positionData));
+	glBufferData(GL_ARRAY_BUFFER, _maxParticles * 4 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, _particlesCount * sizeof(GLfloat) * 4, &_colourData.at(0));
+	
+	glVertexAttribPointer(
+		5, // attribute
+		4, // size 
+		GL_FLOAT, // type
+		GL_FALSE, // normalized?
+		0, // stride
+		(void*)0 // array buffer offset
+	); glEnableVertexAttribArray(5);
+	glVertexAttribDivisor(5, 1); // color : one per quad 
+	
+	
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+	return id;
+}
+*/

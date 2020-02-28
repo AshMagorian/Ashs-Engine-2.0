@@ -120,6 +120,8 @@ ShaderProgram::ShaderProgram(std::string _path)
 	{
 		throw Exception("Shader cannot be created");
 	}
+	glUseProgram(id);
+
 
 	glDetachShader(id, vertexShaderId);
 	glDeleteShader(vertexShaderId);
@@ -168,9 +170,9 @@ void ShaderProgram::DrawParticles(std::shared_ptr<VertexArray> vertexArray, int 
 	glUseProgram(id);
 	glBindVertexArray(vertexArray->GetParticlesId(_maxParticles, _particlesCount, _positionData, _colourData));
 
-	glVertexAttribDivisor(0, 0);
-	glVertexAttribDivisor(4, 1);
-	glVertexAttribDivisor(5, 1);
+	glEnableVertexAttribArray(4);
+	glEnableVertexAttribArray(5);
+
 	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, _particlesCount);
 
 	//std::cout << _particlesCount << std::endl;

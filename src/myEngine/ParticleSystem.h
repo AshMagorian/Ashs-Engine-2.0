@@ -36,10 +36,6 @@ private:
 	std::shared_ptr<ShaderProgram> m_shaderProgram;
 	std::shared_ptr<VertexArray> m_particlesVA;
 
-	std::shared_ptr<Entity> test;
-	std::shared_ptr<Entity> test2;
-	std::shared_ptr<Entity> test3;
-
 public:
 	void onInit(int _maxParticles);
 	void onTick();
