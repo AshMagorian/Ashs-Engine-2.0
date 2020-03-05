@@ -54,6 +54,7 @@ public:
 	*\brief Calculates and returns the model matrix
 	*/
 	glm::mat4 GetModelMatrix();
+	glm::mat4 GetRotationMatrix();
 
 	void IsSprite() { m_isSprite = true; }
 

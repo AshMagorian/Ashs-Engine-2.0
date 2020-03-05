@@ -12,6 +12,24 @@ void ParticleSystem::onInit(int _maxParticles)
 	m_particlesVA->MakeParticles(m_maxParticles);
 
 	m_shaderProgram = getApplication()->GetResourceManager()->LoadFromResources<ShaderProgram>("particle_shader");
+
+	//create the quat
+
+	float yaw = glm::radians(m_offsetRotation.y);
+	float pitch = glm::radians(m_offsetRotation.x);
+	float roll = glm::radians(m_offsetRotation.z);
+	
+	float cy = cos(yaw * 0.5f);
+	float sy = sin(yaw * 0.5f);
+	float cp = cos(pitch * 0.5f);
+	float sp = sin(pitch * 0.5f);
+	float cr = cos(roll * 0.5f);
+	float sr = sin(roll * 0.5f);
+
+	m_quat.w = cy * cp * cr + sy * sp * sr;
+	m_quat.x = cy * cp * sr - sy * sp * cr;
+	m_quat.y = sy * cp * sr + cy * sp * cr;
+	m_quat.z = sy * cp * cr - cy * sp * sr;
 }
 
 void ParticleSystem::onTick()
@@ -19,6 +37,7 @@ void ParticleSystem::onTick()
 	m_delta = getApplication()->GetDeltaTime();
 	//m_delta = 0.016f;
 	//std::cout << "delta: " << m_delta << std::endl;
+	m_rotMatrix = getEntity()->GetTransform()->GetRotationMatrix();
 
 	m_shaderProgram->SetUniform("in_Projection", getApplication()->GetCamera()->GetProjectionMatrix());
 	m_shaderProgram->SetUniform("in_View", getApplication()->GetCamera()->GetViewMatrix());
@@ -36,13 +55,38 @@ void ParticleSystem::onTick()
 		float rndm = ((static_cast<float> (rand()) / static_cast<float> (RAND_MAX)) - 0.5) * 2;
 		float rndm2 = ((static_cast<float> (rand()) / static_cast<float> (RAND_MAX)) - 0.5) * 2;
 
+
 		int j = FindUnusedParticle();
 
-		m_particlesContainer[j].pos = getEntity()->GetTransform()->GetPos();
-		m_particlesContainer[j].speed = glm::vec3(rndm * 3 ,7.0f, rndm2 * 3);
+		glm::vec3 planePosition = glm::vec3(m_positionOffset.x * rndm, 0.0f , m_positionOffset.y * rndm2);
+
+		planePosition = glm::vec4(planePosition, 1.0f) * getEntity()->GetTransform()->GetModelMatrix();
+		
+
+
+
+		m_particlesContainer[j].pos = planePosition;
+		//m_particlesContainer[j].pos = getEntity()->GetTransform()->GetPos();
 
 		rndm = (static_cast<float> (rand()) / static_cast<float> (RAND_MAX));
+		rndm2 = (static_cast<float> (rand()) / static_cast<float> (RAND_MAX));
 
+		float angle = rndm * m_spreadAngle;
+		float x = cos(abs((m_pi / 2.0f) - glm::radians(angle)));
+		float y = sin(abs((m_pi / 2.0f) - glm::radians(angle)));
+		angle = rndm2 * m_pi * 2.0f;
+		float x2 = cos(angle) * x;
+		float y2 = sin(angle) * x;
+		glm::vec3 randomSpreadDirection = glm::vec3(x2, y, y2);
+
+		glm::quat p = glm::quat(randomSpreadDirection.x, randomSpreadDirection.y, randomSpreadDirection.z, 0.0f);
+		glm::quat p1 = m_quat * p * glm::conjugate(m_quat);
+		glm::vec3 direction = glm::vec3(p1.x, p1.y, p1.z); 
+		direction = glm::vec4(direction, 1.0f) * m_rotMatrix;
+
+		m_particlesContainer[j].velocity = m_speed * direction;
+
+		rndm = (static_cast<float> (rand()) / static_cast<float> (RAND_MAX));
 		m_particlesContainer[j].r = rndm;
 		rndm = (static_cast<float> (rand()) / static_cast<float> (RAND_MAX));
 		m_particlesContainer[j].g = rndm;
@@ -52,7 +96,7 @@ void ParticleSystem::onTick()
 
 		m_particlesContainer[j].size = 0.2f;
 		
-		m_particlesContainer[j].life = 2.0f;
+		m_particlesContainer[j].life = m_particleLife;
 		
 	}
 
@@ -70,8 +114,8 @@ void ParticleSystem::onTick()
 			//p.life -= 0.01f;
 			if (p.life > 0.0f)
 			{
-				p.speed += glm::vec3(0.0f, -9.81f, 0.0f) * m_delta * 0.5f;
-				p.pos += p.speed * m_delta;
+				p.velocity += glm::vec3(0.0f, -9.81f, 0.0f) * m_delta * 0.5f;
+				p.pos += p.velocity * m_delta;
 				//p.cameradistance = glm::length2(p.pos - CameraPosition);
 
 				m_positionData.push_back(p.pos.x);
