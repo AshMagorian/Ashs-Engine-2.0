@@ -36,28 +36,23 @@ void ParticleSystem::onInit(int _maxParticles)
 void ParticleSystem::onTick()
 {
 	m_delta = getApplication()->GetDeltaTime();
-	//m_delta = 0.016f;
-	//std::cout << "delta: " << m_delta << std::endl;
 	m_rotMatrix = getEntity()->GetTransform()->GetRotationMatrix();
 	m_localRotMatrix = GetLocalRotationMatrix(m_localRotMatrix);
 
 	m_shaderProgram->SetUniform("in_Projection", getApplication()->GetCamera()->GetProjectionMatrix());
 	m_shaderProgram->SetUniform("in_View", getApplication()->GetCamera()->GetViewMatrix());
 
-	// Generate 1 new particule each millisecond,
-	// but limit this to 16 ms (60 fps), or if you have 1 long frame (1sec),
-	// newparticles will be huge and the next frame even longer.
-	int newParticles = (int)(m_delta*200.0);
-	if (newParticles > (int)(0.016f*200.0))
-		newParticles = (int)(0.016f*200.0);
+	int newParticles = (int)(m_delta* m_particlesPerSecond);
+	if (newParticles > (int)(0.016f* m_particlesPerSecond))
+		newParticles = (int)(0.016f* m_particlesPerSecond);
 
 
-	glm::vec3 averageDirection = glm::vec3(0.0f, 1.0f, 0.0f);
-	glm::quat p = glm::quat(averageDirection.x, averageDirection.y, averageDirection.z, 0.0f);
-	glm::quat p1 = m_quat * p * glm::conjugate(m_quat);
-	glm::vec3 direction = glm::vec3(p1.x, p1.y, p1.z);
+	//glm::vec3 averageDirection = glm::vec3(0.0f, 1.0f, 0.0f);
+	//glm::quat p = glm::quat(averageDirection.x, averageDirection.y, averageDirection.z, 0.0f);
+	//glm::quat p1 = m_quat * p * glm::conjugate(m_quat);
+	//glm::vec3 direction = glm::vec3(p1.x, p1.y, p1.z);
 
-	averageDirection = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f) * m_rotMatrix * m_localRotMatrix;
+	glm::vec4 averageDirection = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f) * m_rotMatrix * m_localRotMatrix;
 	//std::cout << averageDirection.x << ", " << averageDirection.y << ", " << averageDirection.z << std::endl;
 
 	//Creates the specified number of particles every frame
@@ -93,7 +88,7 @@ void ParticleSystem::onTick()
 		//direction = glm::vec3(p1.x, p1.y, p1.z); 
 		//direction = glm::vec4(direction, 1.0f) * m_rotMatrix;
 
-		direction = glm::vec4(randomSpreadDirection, 1.0f) * m_rotMatrix * m_localRotMatrix;
+		glm::vec3 direction = glm::vec4(randomSpreadDirection, 1.0f) * m_rotMatrix * m_localRotMatrix;
 
 		glm::vec3 upVector;
 		if (averageDirection.y < 0.98f)
@@ -139,7 +134,7 @@ void ParticleSystem::onTick()
 			//p.life -= 0.01f;
 			if (p.life > 0.0f)
 			{
-				p.velocity += glm::vec3(0.0f, -9.81f, 0.0f) * m_delta * 0.5f;
+				p.velocity += glm::vec3(0.0f, -9.81f, 0.0f) * m_delta;
 				p.pos += p.velocity * m_delta;
 				//p.cameradistance = glm::length2(p.pos - CameraPosition);
 

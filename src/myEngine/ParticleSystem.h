@@ -23,19 +23,21 @@ struct Particle
 class ParticleSystem : public Component
 {
 private:
-	int m_maxParticles;
 	std::vector<Particle> m_particlesContainer;
+	
 	int m_lastUsedParticle = 0;
 	int m_particlesCount = 0;
+	float m_pi = 3.14159f;
 	float m_delta = 0.0f;
 
-	float m_pi = 3.14159f;
+	int m_maxParticles = 600;
 	float m_spreadAngle = 40.0f;
 	float m_speed = 5.0f;
 	float m_particleLife = 3.0f;
-	glm::vec2 m_positionOffset = glm::vec2(0.0f, 10.0f);
-
+	glm::vec2 m_positionOffset = glm::vec2(10.0f, 10.0f);
+	int m_particlesPerSecond = 2000;
 	glm::vec3 m_offsetRotation = glm::vec3(0.0f, 0.0f, 0.0f);
+
 	glm::quat m_quat;
 	glm::mat4 m_localRotMatrix;
 	glm::mat4 m_rotMatrix;
