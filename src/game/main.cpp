@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 
 	//make partile system
 	std::shared_ptr<Entity> particles = application->addEntity();
-	particles->addComponent<ParticleSystem>(6000);
+	particles->addComponent<ParticleSystem>(1500);
 	particles->GetTransform()->SetPos(glm::vec3(-3.0f, 20.0f, 0.0f));
 	particles->GetTransform()->SetRotation(glm::vec3(0.0f, 0.0f, 180.0f));
 	particles->addComponent<SpinComponent>();
