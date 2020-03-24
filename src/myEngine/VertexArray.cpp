@@ -355,7 +355,7 @@ GLuint VertexArray::GetParticlesId(int _maxParticles, int _particlesCount, std::
 			}
 		}
 		else
-		{
+		{ 
 			glDisableVertexAttribArray(i);
 		}
 	}

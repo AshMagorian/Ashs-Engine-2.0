@@ -3,7 +3,6 @@
 #include "VertexArray.h"
 #include "ShaderProgram.h"
 #include "Texture.h"
-#include "Entity.h"
 
 Resources::Resources()
 {
@@ -53,6 +52,29 @@ std::shared_ptr<Material> Resources::CreateMaterial(std::string _name, std::shar
 	std::cout << _name << " created" << std::endl;
 	return material;
 }
+
+void Resources::CreateShader(std::string _name, std::shared_ptr<ShaderProgram> _shader)
+{
+	try
+	{
+		if (!_shader)
+		{
+			throw Exception(_name + " cannot be saved to resources as it does not exist");
+		}
+	}
+	catch (Exception& e)
+	{
+		std::cout << "myEngine Exception: " << e.what() << std::endl;
+		return;
+	}
+
+	_shader->SetPath(_name);
+	_shader->SetName(_name);
+	m_resources.push_back(_shader);
+	std::cout << _name << " created" << std::endl;
+
+}
+
 
 void Resources::CreatePrefab(std::string _id, std::shared_ptr<Entity> _entity)
 {

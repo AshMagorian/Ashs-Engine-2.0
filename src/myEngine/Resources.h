@@ -10,6 +10,8 @@
 #include "Material.h"
 #include "Entity.h"
 
+class ShaderProgram;
+
 struct Prefab
 {
 	std::string id;
@@ -91,6 +93,8 @@ public:
 
 	std::shared_ptr<Material> CreateMaterial(std::string _name, std::shared_ptr<Texture> _diff, std::shared_ptr<Texture> _spec, float _shine);
 	std::shared_ptr<Material> CreateMaterial(std::string _name, std::shared_ptr<Texture> _diff, float _shine);
+
+	void CreateShader(std::string _name, std::shared_ptr<ShaderProgram> _shader);
 
 	void CreatePrefab(std::string _id, std::shared_ptr<Entity> _entity);
 	std::shared_ptr<Entity> LoadPrefab(std::string _id);

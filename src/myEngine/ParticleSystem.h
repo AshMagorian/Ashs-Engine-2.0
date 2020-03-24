@@ -25,6 +25,9 @@ class ParticleSystem : public Component
 private:
 	std::vector<Particle> m_particlesContainer;
 	
+	bool m_started = false;
+	bool m_firstParticles = false;
+
 	int m_lastUsedParticle = 0;
 	int m_particlesCount = 0;
 	float m_pi = 3.14159f;

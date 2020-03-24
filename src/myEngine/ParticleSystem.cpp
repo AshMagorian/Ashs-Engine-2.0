@@ -39,6 +39,8 @@ void ParticleSystem::onInit(int _maxParticles)
 
 void ParticleSystem::onTick()
 {
+	
+
 	m_delta = getApplication()->GetDeltaTime();
 	m_rotMatrix = getEntity()->GetTransform()->GetRotationMatrix();
 	m_localRotMatrix = GetLocalRotationMatrix(m_localRotMatrix);
@@ -54,9 +56,18 @@ void ParticleSystem::onTick()
 
 	if (m_newParticles > 1.0f)
 	{
+		if (m_started == false) 
+		{
+			m_started = true; m_firstParticles = true;
+		}
 		newParticles = (int)(m_newParticles);
 		m_newParticles = 0.0f;
 	}
+	if (m_started == false) { return; }
+
+	m_firstParticles = false;
+
+
 
 	glm::vec4 averageDirection = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f) * m_rotMatrix * m_localRotMatrix;
 
@@ -141,6 +152,7 @@ void ParticleSystem::onTick()
 
 void ParticleSystem::onDisplay()
 {
+	if (m_started == false) { return; }
 	m_shaderProgram->DrawParticles(m_particlesVA, m_maxParticles, m_particlesCount, m_positionData, m_colourData);
 }
 

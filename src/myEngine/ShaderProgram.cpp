@@ -7,6 +7,12 @@
 #include <glm/ext.hpp>
 #include <iostream>
 
+
+ShaderProgram::ShaderProgram()
+{
+	id = glCreateProgram();
+}
+
 /**
 *The file passed through contains the paths for both shader files. This is because to make 
 *Shaderprogram a resource it needed to take only one paramater as opposed to two
@@ -32,13 +38,42 @@ ShaderProgram::ShaderProgram(std::string _path)
 	}
 	file.close();
 
-	std::string vertShader;
-	std::string fragShader;
+	id = glCreateProgram();
 
-	file.open(vertPath);
+	GLuint vertexShaderId = AttachVetexShader(vertPath);
+	GLuint fragmentShaderId = AttachFragmentShader(fragPath);
+
+	glBindAttribLocation(id, 0, "in_Position");
+	glBindAttribLocation(id, 1, "in_Color");
+	glBindAttribLocation(id, 2, "in_TexCoord");
+	glBindAttribLocation(id, 3, "in_Normal");
+	glBindAttribLocation(id, 4, "in_Particles_Position");
+	glBindAttribLocation(id, 5, "in_Particles_Color");
+
+	// Perform the link and check for faliure
+	glLinkProgram(id);
+	GLint success = 0;
+	glGetProgramiv(id, GL_LINK_STATUS, &success);
+	if (!success)
+	{
+		throw Exception("Shader cannot be created");
+	}
+	glUseProgram(id);
+
+
+	glDetachShader(id, vertexShaderId);
+	glDeleteShader(vertexShaderId);
+	glDetachShader(id, fragmentShaderId);
+	glDeleteShader(fragmentShaderId);
+}
+
+GLuint ShaderProgram::AttachVetexShader(std::string _path)
+{
+	std::string vertShader;
+	std::ifstream file(_path);
 	if (!file.is_open())
 	{
-		throw Exception("Vertex shader not found, '" + vertPath + "' cannot be loaded");
+		throw Exception("Vertex shader not found, '" + _path + "' cannot be loaded");
 	}
 	else
 	{
@@ -51,26 +86,7 @@ ShaderProgram::ShaderProgram(std::string _path)
 	}
 	file.close();
 
-	file.open(fragPath);
-
-	if (!file.is_open())
-	{
-		throw Exception("Fragment shader not found, '" + fragPath + "' cannot be loaded");
-	}
-	else
-	{
-		while (!file.eof())
-		{
-			std::string line;
-			std::getline(file, line);
-			fragShader += line + "\n";
-		}
-	}
-	file.close();
-
 	const char *vertex = vertShader.c_str();
-	const char *fragment = fragShader.c_str();
-
 	GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShaderId, 1, &vertex, NULL);
 	glCompileShader(vertexShaderId);
@@ -85,11 +101,34 @@ ShaderProgram::ShaderProgram(std::string _path)
 		//std::cout << &errorlog.at(0) << std::endl;
 		throw Exception("Vertex shader compile error: " + (std::string)&errorlog.at(0));
 	}
+	glAttachShader(id, vertexShaderId);
+	return vertexShaderId;
+}
+GLuint ShaderProgram::AttachFragmentShader(std::string _path)
+{
+	std::string fragShader;
+	std::ifstream file(_path);
 
+	if (!file.is_open())
+	{
+		throw Exception("Fragment shader not found, '" + _path + "' cannot be loaded");
+	}
+	else
+	{
+		while (!file.eof())
+		{
+			std::string line;
+			std::getline(file, line);
+			fragShader += line + "\n";
+		}
+	}
+	file.close();
+
+	const char *fragment = fragShader.c_str();
 	GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShaderId, 1, &fragment, NULL);
 	glCompileShader(fragmentShaderId);
-	success = 0;
+	GLint success = 0;
 	glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
@@ -100,34 +139,17 @@ ShaderProgram::ShaderProgram(std::string _path)
 		//std::cout << &errorlog.at(0) << std::endl;
 		throw Exception("Fragment shader compile error: " + (std::string)&errorlog.at(0));
 	}
-
-	id = glCreateProgram();
-	glAttachShader(id, vertexShaderId);
 	glAttachShader(id, fragmentShaderId);
-
-	glBindAttribLocation(id, 0, "in_Position");
-	glBindAttribLocation(id, 1, "in_Color");
-	glBindAttribLocation(id, 2, "in_TexCoord");
-	glBindAttribLocation(id, 3, "in_Normal");
-	glBindAttribLocation(id, 4, "in_Particles_Position");
-	glBindAttribLocation(id, 5, "in_Particles_Color");
-
-	// Perform the link and check for faliure
-	glLinkProgram(id);
-	success = 0;
-	glGetProgramiv(id, GL_LINK_STATUS, &success);
-	if (!success)
-	{
-		throw Exception("Shader cannot be created");
-	}
-	glUseProgram(id);
-
-
-	glDetachShader(id, vertexShaderId);
-	glDeleteShader(vertexShaderId);
-	glDetachShader(id, fragmentShaderId);
-	glDeleteShader(fragmentShaderId);
+	return fragmentShaderId;
 }
+
+void ShaderProgram::MakeTransformFeedbackShader(std::string _vert, std::string _frag, std::string _varyings[])
+{
+	GLuint vertexShaderId = AttachVetexShader(_vert);
+	GLuint fragmentShaderId = AttachFragmentShader(_frag);
+
+}
+
 /**
 *\brief Draws the passed vertex array to the screen
 */

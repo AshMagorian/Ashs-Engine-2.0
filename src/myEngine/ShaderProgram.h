@@ -29,9 +29,18 @@ private:
 
 public:
 	/**
+	*\brief Creates an id for a shader
+	*/
+	ShaderProgram();
+	/**
 	*\brief Reads the shader files
 	*/
 	ShaderProgram(std::string _path);
+
+	void MakeTransformFeedbackShader(std::string _vert, std::string _frag, std::string _varyings[]);
+	GLuint AttachVetexShader(std::string _path);
+	GLuint AttachFragmentShader(std::string _path);
+
 	/**
 	*\brief draws the vertex array to the screen
 	*/
