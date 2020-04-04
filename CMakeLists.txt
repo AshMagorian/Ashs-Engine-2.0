@@ -77,6 +77,10 @@ add_library(myEngine
 	src/myEngine/SpriteRenderer.cpp
 	src/myEngine/ParticleSystem.h
 	src/myEngine/ParticleSystem.cpp
+	src/myEngine/WeatherParticles.h
+	src/myEngine/WeatherParticles.cpp
+	src/myEngine/WeatherManager.h
+	src/myEngine/WeatherManager.cpp
 )	
 
 if(MSVC)

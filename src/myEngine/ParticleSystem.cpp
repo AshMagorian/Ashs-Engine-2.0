@@ -18,23 +18,9 @@ void ParticleSystem::onInit(int _maxParticles)
 
 	m_shaderProgram = getApplication()->GetResourceManager()->LoadFromResources<ShaderProgram>("particle_shader");
 
-	//create the quat
-
-	float yaw = glm::radians(m_offsetRotation.y);
-	float pitch = glm::radians(m_offsetRotation.x);
-	float roll = glm::radians(m_offsetRotation.z);
-	
-	float cy = cos(yaw * 0.5f);
-	float sy = sin(yaw * 0.5f);
-	float cp = cos(pitch * 0.5f);
-	float sp = sin(pitch * 0.5f);
-	float cr = cos(roll * 0.5f);
-	float sr = sin(roll * 0.5f);
-
-	m_quat.w = cy * cp * cr + sy * sp * sr;
-	m_quat.x = cy * cp * sr - sy * sp * cr;
-	m_quat.y = sy * cp * sr + cy * sp * cr;
-	m_quat.z = sy * cp * cr - cy * sp * sr;
+	m_shaderProgram->SetUniform("in_StartColor", m_startColour);
+	m_shaderProgram->SetUniform("in_EndColor", m_endColour);
+	m_shaderProgram->SetUniform("in_TotalLife", m_particleLife);
 }
 
 void ParticleSystem::onTick()
@@ -47,6 +33,7 @@ void ParticleSystem::onTick()
 
 	m_shaderProgram->SetUniform("in_Projection", getApplication()->GetCamera()->GetProjectionMatrix());
 	m_shaderProgram->SetUniform("in_View", getApplication()->GetCamera()->GetViewMatrix());
+	//m_shaderProgram->SetUniform("in_PlayerPos", getApplication()->GetCamera()->GetCurrentCamera()->GetTransform()->GetPos());
 
 	int newParticles = 0;
 	if (m_delta * m_particlesPerSecond > 0.016f* m_particlesPerSecond)
@@ -65,9 +52,6 @@ void ParticleSystem::onTick()
 	}
 	if (m_started == false) { return; }
 
-	m_firstParticles = false;
-
-
 
 	glm::vec4 averageDirection = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f) * m_rotMatrix * m_localRotMatrix;
 
@@ -82,27 +66,13 @@ void ParticleSystem::onTick()
 		m_particlesContainer[j].pos = planePosition;
 		m_particlesContainer[j].velocity = m_speed * direction;
 
-		//float rndm = (static_cast<float> (rand()) / static_cast<float> (RAND_MAX));
-		//m_particlesContainer[j].r = rndm;
-		//rndm = (static_cast<float> (rand()) / static_cast<float> (RAND_MAX));
-		//m_particlesContainer[j].g = rndm;
-		//rndm = (static_cast<float> (rand()) / static_cast<float> (RAND_MAX));
-		//m_particlesContainer[j].b = rndm;
-		//m_particlesContainer[j].a = 0.7f;
-
-		m_particlesContainer[j].r = m_startColour.x;
-		m_particlesContainer[j].g = m_startColour.y;
-		m_particlesContainer[j].b = m_startColour.z;
-		m_particlesContainer[j].a = m_startColour.w;
-
-		m_particlesContainer[j].size = 0.3f;
-		
+		m_particlesContainer[j].size = 1.0f;
 		m_particlesContainer[j].life = m_particleLife;
 		
 	}
 
 	m_positionData.clear();
-	m_colourData.clear();
+	m_velocityLifeData.clear();
 
 	glm::vec3 cameraPosition = getApplication()->GetCamera()->GetCurrentCamera()->GetTransform()->GetPos();
 
@@ -114,34 +84,21 @@ void ParticleSystem::onTick()
 		if (p.life > 0.0f)
 		{
 			p.life -= m_delta;
-			//p.life -= 0.01f;
-			if (p.life > 0.0f)
-			{
-				p.velocity += m_force *m_delta;
-				p.pos += p.velocity * m_delta;
-				p.cameraDistance = glm::length2(p.pos - cameraPosition);
 
-				float x = 1.0f - (p.life / m_particleLife);
+			p.velocity += m_force *m_delta;
+			p.pos += p.velocity * m_delta;
+			p.cameraDistance = glm::length2(p.pos - cameraPosition);
 
-				p.r = m_startColour.x + ((m_endColour.x - m_startColour.x) * x);
-				p.g = m_startColour.y + ((m_endColour.y - m_startColour.y) * x);
-				p.b = m_startColour.z + ((m_endColour.z - m_startColour.z) * x);
-				p.a = m_startColour.w + ((m_endColour.w - m_startColour.w) * x);
+			m_positionData.push_back(p.pos.x);
+			m_positionData.push_back(p.pos.y);
+			m_positionData.push_back(p.pos.z);
+			m_positionData.push_back(p.size);
 
-				m_positionData.push_back(p.pos.x);
-				m_positionData.push_back(p.pos.y);
-				m_positionData.push_back(p.pos.z);
-				m_positionData.push_back(p.size);
-				
-				m_colourData.push_back(p.r);
-				m_colourData.push_back(p.g);
-				m_colourData.push_back(p.b);
-				m_colourData.push_back(p.a);
-			}
-			else
-			{
-				p.a = 0.0f;
-			}
+			m_velocityLifeData.push_back(p.velocity.x);
+			m_velocityLifeData.push_back(p.velocity.y);
+			m_velocityLifeData.push_back(p.velocity.z);
+			m_velocityLifeData.push_back(p.life);
+			 
 			m_particlesCount++;
 		}
 	}
@@ -153,7 +110,8 @@ void ParticleSystem::onTick()
 void ParticleSystem::onDisplay()
 {
 	if (m_started == false) { return; }
-	m_shaderProgram->DrawParticles(m_particlesVA, m_maxParticles, m_particlesCount, m_positionData, m_colourData);
+	m_shaderProgram->DrawParticles(m_particlesVA, m_maxParticles, m_particlesCount, m_positionData, m_velocityLifeData);
+	m_firstParticles = false;
 }
 
 int ParticleSystem::FindUnusedParticle()
@@ -226,4 +184,21 @@ glm::vec3 ParticleSystem::GetRandomSpreadDirection()
 
 	glm::vec3 direction = glm::vec4(randomSpreadDirection, 1.0f) * m_rotMatrix * m_localRotMatrix;
 	return direction;
+}
+
+void ParticleSystem::MakeTextureParticles(std::shared_ptr<Texture> _tex)
+{
+	m_shaderProgram = getApplication()->GetResourceManager()->LoadFromResources<ShaderProgram>("particle_tex_shader");
+	m_particlesVA->SetParticleTexCoords();
+	m_shaderProgram->SetUniform("in_Texture", _tex);
+}
+
+void ParticleSystem::MakeMaskedParticles(std::shared_ptr<Texture> _tex)
+{
+	m_shaderProgram = getApplication()->GetResourceManager()->LoadFromResources<ShaderProgram>("particle_mask_shader");
+	m_particlesVA->SetParticleTexCoords();
+	m_shaderProgram->SetUniform("in_Texture", _tex);
+	m_shaderProgram->SetUniform("in_StartColor", m_startColour);
+	m_shaderProgram->SetUniform("in_EndColor", m_endColour);
+	m_shaderProgram->SetUniform("in_TotalLife", m_particleLife);
 }

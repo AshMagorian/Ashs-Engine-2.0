@@ -8,6 +8,7 @@
 
 class ShaderProgram;
 class VertexArray;
+class Texture;
 
 class Entity;
 
@@ -15,7 +16,6 @@ struct Particle
 {
 	glm::vec3 pos, velocity;
 	float cameraDistance;
-	float r, g, b, a;
 	float size, angle, weight;
 	float life = -1.0f;
 };
@@ -46,12 +46,11 @@ private:
 	glm::vec4 m_startColour = glm::vec4(1.0f, 1.0f, 0.0f, 0.7f);
 	glm::vec4 m_endColour = glm::vec4(1.0f, 0.0f, 1.0f, 0.7f);
 
-	glm::quat m_quat;
 	glm::mat4 m_localRotMatrix;
 	glm::mat4 m_rotMatrix;
 
 	std::vector<float> m_positionData;
-	std::vector<float> m_colourData;
+	std::vector<float> m_velocityLifeData;
 
 	int FindUnusedParticle();
 	glm::mat4 GetLocalRotationMatrix(glm::mat4 _model);
@@ -66,13 +65,16 @@ public:
 	void onTick();
 	void onDisplay();
 
+	void MakeTextureParticles(std::shared_ptr<Texture> _tex);
+	void MakeMaskedParticles(std::shared_ptr<Texture> _tex);
+
 	void SetSpreadAngle(float _angle) { m_spreadAngle = _angle; }
 	void SetSpeed(float _speed) { m_speed = _speed; }
-	void SetParticleLife(float _life) { m_particleLife = _life; }
+	void SetParticleLife(float _life) { m_particleLife = _life; m_shaderProgram->SetUniform("in_TotalLife", m_particleLife);}
 	void SetPositionOffset(float _x, float _y) { m_positionOffset.x = _x; m_positionOffset.y = _y; }
 	void SetParticlesPerSecond(int _particles) { m_particlesPerSecond = _particles; }
 	void SetOffsetRotation(glm::vec3 _rot) { m_offsetRotation = _rot; }
-	void SetColours(glm::vec4 _start, glm::vec4 _end) { m_startColour = _start; m_endColour = _end; }
+	void SetColours(glm::vec4 _start, glm::vec4 _end) { m_startColour = _start; m_endColour = _end; m_shaderProgram->SetUniform("in_StartColor", m_startColour);m_shaderProgram->SetUniform("in_EndColor", m_endColour);}
 
 
 };

@@ -203,10 +203,10 @@ void VertexArray::MakeSprite()
 void VertexArray::MakeParticles(int _maxParticles)
 {
 	std::shared_ptr<VertexBuffer> billboardVertex = std::make_shared<VertexBuffer>();
-	billboardVertex->add(glm::vec3(-0.5f, -0.5f, 0.0f));
-	billboardVertex->add(glm::vec3(0.5f, -0.5f, 0.0f));
-	billboardVertex->add(glm::vec3(-0.5f, 0.5f, 0.0f));
-	billboardVertex->add(glm::vec3(0.5f, 0.5f, 0.0f));
+	billboardVertex->add(glm::vec3(-0.5f, -0.5f, 0.0f)); // Top Left
+	billboardVertex->add(glm::vec3(0.5f, -0.5f, 0.0f)); // Top right
+	billboardVertex->add(glm::vec3(-0.5f, 0.5f, 0.0f)); // Bottom left
+	billboardVertex->add(glm::vec3(0.5f, 0.5f, 0.0f)); // Bottom right
 
 	std::shared_ptr<VertexBuffer> particlePositions = std::make_shared<VertexBuffer>();
 	particlePositions->ParticleBufferInit(_maxParticles);
@@ -224,6 +224,27 @@ void VertexArray::MakeParticles(int _maxParticles)
 		buffers.at(0)->GetComponents() * sizeof(GLfloat), (void *)0);
 	glVertexAttribDivisor(0, 0); // one per vertex
 }
+
+void VertexArray::SetParticleTexCoords()
+{
+	std::shared_ptr<VertexBuffer> texCoords = std::make_shared<VertexBuffer>();
+	texCoords->add(glm::vec2(0.0f, 1.0f));
+	texCoords->add(glm::vec2(1.0f, 1.0f));
+	texCoords->add(glm::vec2(0.0f, 0.0f));
+	texCoords->add(glm::vec2(1.0f, 0.0f));
+
+	SetBuffer("in_TexCoord", texCoords);
+
+	glBindVertexArray(id);
+	glBindBuffer(GL_ARRAY_BUFFER, buffers.at(2)->GetId());
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, buffers.at(2)->GetComponents(), GL_FLOAT, GL_FALSE,
+		buffers.at(2)->GetComponents() * sizeof(GLfloat), (void *)0);
+	glVertexAttribDivisor(2, 0); // one per vertex
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
 
 /**
 *\brief Stores a buffer into the vector. It's position in teh vector depends on it's attrbute which is passed through
@@ -343,16 +364,16 @@ GLuint VertexArray::GetParticlesId(int _maxParticles, int _particlesCount, std::
 				);
 				glVertexAttribDivisor(i, 1); // color : one per quad 
 			}
-			else
-			{
-				glBindBuffer(GL_ARRAY_BUFFER, buffers.at(i)->GetId());
-				
-				glEnableVertexAttribArray(i);
-				
-				glVertexAttribPointer(i, buffers.at(i)->GetComponents(), GL_FLOAT, GL_FALSE,
-					buffers.at(i)->GetComponents() * sizeof(GLfloat), (void *)0);
-				glVertexAttribDivisor(i, 0); // one per vertex
-			}
+			//else
+			//{
+			//	glBindBuffer(GL_ARRAY_BUFFER, buffers.at(i)->GetId());
+			//	
+			//	glEnableVertexAttribArray(i);
+			//	
+			//	glVertexAttribPointer(i, buffers.at(i)->GetComponents(), GL_FLOAT, GL_FALSE,
+			//		buffers.at(i)->GetComponents() * sizeof(GLfloat), (void *)0);
+			//	glVertexAttribDivisor(i, 0); // one per vertex
+			//}
 		}
 		else
 		{ 

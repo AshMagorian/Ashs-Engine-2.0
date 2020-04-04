@@ -190,14 +190,38 @@ void ShaderProgram::DrawParticles(std::shared_ptr<VertexArray> vertexArray, int 
 {
 	// Instruct OpenGL to use our shader program and our VAO
 	glUseProgram(id);
+
+	glDisable(GL_CULL_FACE);
+
 	glBindVertexArray(vertexArray->GetParticlesId(_maxParticles, _particlesCount, _positionData, _colourData));
 
 	glEnableVertexAttribArray(4);
 	glEnableVertexAttribArray(5);
 
+	for (size_t i = 0; i < samplers.size(); i++)
+	{
+		glActiveTexture(GL_TEXTURE0 + i);
+
+		if (samplers.at(i).texture)
+		{
+			glBindTexture(GL_TEXTURE_2D, samplers.at(i).texture->getId());
+		}
+		else
+		{
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+	}
+
 	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, _particlesCount);
 
-	//std::cout << _particlesCount << std::endl;
+	//Unbinds the textures for all samplers
+	for (size_t i = 0; i < samplers.size(); i++)
+	{
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	glEnable(GL_CULL_FACE);
 
 	// Reset the state
 	glBindVertexArray(0);

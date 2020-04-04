@@ -33,6 +33,7 @@ public:
 
 	void MakeSprite();
 	void MakeParticles(int _maxParticles);
+	void SetParticleTexCoords();
 	/**
 	*\brief Stores a buffer into the vector. It's position in teh vector depends on it's attrbute which is passed through
 	*/

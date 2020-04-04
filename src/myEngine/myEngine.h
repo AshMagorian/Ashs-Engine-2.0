@@ -26,5 +26,7 @@
 #include "SpotLight.h"
 #include "SpriteRenderer.h"
 #include "ParticleSystem.h"
+#include "WeatherParticles.h"
+#include "WeatherManager.h"
 
 #endif

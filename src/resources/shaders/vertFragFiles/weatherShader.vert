@@ -6,6 +6,7 @@ uniform mat4 in_Projection;
 uniform vec4 in_StartColor;
 uniform vec4 in_EndColor;
 uniform float in_TotalLife;
+uniform vec3 in_PlayerPos;
 
 layout(location = 0) in vec3 in_Position;
 layout(location = 4) in vec4 in_Particle_Position;
@@ -15,8 +16,9 @@ out vec4 ex_Particle_Color;
 
 void main()
 {
-	vec3 CameraRight_worldspace = vec3(in_View[0][0], in_View[1][0], in_View[2][0]);
-	vec3 CameraUp_worldspace = vec3(in_View[0][1], in_View[1][1], in_View[2][1]);
+	vec3 CamVector = vec3 (in_Particle_Position.x, in_Particle_Position.y, in_Particle_Position.z) - in_PlayerPos;
+	vec3 CameraRight_worldspace = normalize(cross(CamVector, vec3(0.0, 1.0, 0.0)));
+	vec3 CameraUp_worldspace = vec3(0.0, 1.0, 0.0);
 	
 	vec3 newPosition = 
 	vec3 (in_Particle_Position.x, in_Particle_Position.y, in_Particle_Position.z)

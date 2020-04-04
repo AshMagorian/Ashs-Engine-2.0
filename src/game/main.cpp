@@ -98,10 +98,10 @@ int main(int argc, char *argv[])
 	/**
 	*Creates the floor of the stage
 	*/
-	std::shared_ptr<Entity> floor = application->MakeCube();
-	floor->GetComponent<Renderer>()->SetMaterial(application->GetResourceManager()->LoadFromResources<Material>("orange_mat"));
-	floor->GetTransform()->SetPos(glm::vec3(0.0f, -1.5f, 0.0f));
-	floor->GetTransform()->SetScale(glm::vec3(15.0f, 0.5f, 15.0f));
+	//std::shared_ptr<Entity> floor = application->MakeCube();
+	//floor->GetComponent<Renderer>()->SetMaterial(application->GetResourceManager()->LoadFromResources<Material>("orange_mat"));
+	//floor->GetTransform()->SetPos(glm::vec3(0.0f, -1.5f, 0.0f));
+	//floor->GetTransform()->SetScale(glm::vec3(15.0f, 0.5f, 15.0f));
 
 	//make billboard
 	std::shared_ptr<Entity> mimikyu = application->addEntity();
@@ -109,12 +109,15 @@ int main(int argc, char *argv[])
 	mimikyu->GetTransform()->SetPos(glm::vec3(3.0f, 0.0f, 0.0f));
 	mimikyu->GetTransform()->SetScale(glm::vec3(2.0f, 2.0f, 2.0f));
 
-	//make partile system
-	std::shared_ptr<Entity> particles = application->addEntity();
-	particles->addComponent<ParticleSystem>(1500);
-	particles->GetTransform()->SetPos(glm::vec3(-3.0f, 20.0f, 0.0f));
-	particles->GetTransform()->SetRotation(glm::vec3(0.0f, 0.0f, 180.0f));
-	particles->addComponent<SpinComponent>();
+	////make partile system
+	//std::shared_ptr<Entity> particles = application->addEntity();
+	//particles->addComponent<ParticleSystem>(1500);
+	//particles->GetTransform()->SetPos(glm::vec3(-3.0f, 20.0f, 0.0f));
+	//particles->GetTransform()->SetRotation(glm::vec3(0.0f, 0.0f, 180.0f));
+	//particles->GetComponent<ParticleSystem>()->MakeMaskedParticles(application->GetResourceManager()->LoadFromResources<Texture>("mimikyu"));
+
+	std::shared_ptr<Entity> weather = application->addEntity();
+	weather->addComponent<WeatherParticles>();
 
 	/**
 	*Applies sound to the spinning model

@@ -1,0 +1,2 @@
+../src/resources/shaders/vertFragFiles/particleTexShader.vert
+../src/resources/shaders/vertFragFiles/particleTexShader.frag

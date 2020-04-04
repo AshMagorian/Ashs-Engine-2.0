@@ -3,15 +3,12 @@
 uniform mat4 in_View;
 uniform mat4 in_Projection;
 
-uniform vec4 in_StartColor;
-uniform vec4 in_EndColor;
-uniform float in_TotalLife;
-
 layout(location = 0) in vec3 in_Position;
+layout(location = 2) in vec2 in_TexCoord;
 layout(location = 4) in vec4 in_Particle_Position;
 layout(location = 5) in vec4 in_Particle_Velocity;
 
-out vec4 ex_Particle_Color;
+out vec2 ex_TexCoord;
 
 void main()
 {
@@ -25,9 +22,5 @@ void main()
 
 	gl_Position = in_Projection * in_View * vec4(newPosition, 1.0);
 
-	float x = 1.0 - (in_Particle_Velocity.w / in_TotalLife);
-	ex_Particle_Color.x = in_StartColor.x + ((in_EndColor.x - in_StartColor.x) * x);
-	ex_Particle_Color.y = in_StartColor.y + ((in_EndColor.y - in_StartColor.y) * x);
-	ex_Particle_Color.z = in_StartColor.z + ((in_EndColor.z - in_StartColor.z) * x);
-	ex_Particle_Color.w = in_StartColor.w + ((in_EndColor.w - in_StartColor.w) * x);
+	ex_TexCoord = in_TexCoord;
 }
