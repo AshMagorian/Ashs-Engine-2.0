@@ -83,7 +83,10 @@ std::shared_ptr<Application> const Application::init()
 		app->GetResourceManager()->CreateResource<ShaderProgram>("../src/resources/shaders/particleTexShader.txt", "particle_tex_shader");
 		app->GetResourceManager()->CreateResource<ShaderProgram>("../src/resources/shaders/particleMaskShader.txt", "particle_mask_shader");
 		app->GetResourceManager()->CreateResource<ShaderProgram>("../src/resources/shaders/weatherShader.txt", "weather_shader");
+		app->GetResourceManager()->CreateResource<ShaderProgram>("../src/resources/shaders/weatherTexShader.txt", "weather_tex_shader");
+		app->GetResourceManager()->CreateResource<ShaderProgram>("../src/resources/shaders/weatherMaskShader.txt", "weather_mask_shader");
 		app->GetResourceManager()->CreateResource<Texture>("../src/myEngine/engineRes/Grey.png", "grey_diffuse");
+		app->GetResourceManager()->CreateResource<Texture>("../src/myEngine/engineRes/rain1.png", "rain_diffuse");
 		app->GetResourceManager()->CreateMaterial("default_mat", app->GetResourceManager()->LoadFromResources<Texture>("grey_diffuse"), 32.0f);
 	}
 	catch (Exception& e) { std::cout << "myEngine Exception: " << e.what() << std::endl; }

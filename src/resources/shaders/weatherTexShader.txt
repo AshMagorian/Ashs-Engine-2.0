@@ -1,0 +1,2 @@
+../src/resources/shaders/vertFragFiles/weatherTexShader.vert
+../src/resources/shaders/vertFragFiles/weatherTexShader.frag

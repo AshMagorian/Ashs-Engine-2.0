@@ -1,0 +1,2 @@
+../src/resources/shaders/vertFragFiles/weatherMaskShader.vert
+../src/resources/shaders/vertFragFiles/weatherMaskShader.frag

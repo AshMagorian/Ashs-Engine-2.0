@@ -60,7 +60,6 @@ void WeatherParticles::onTick()
 
 			if (glm::sqrt(pow(p.pos.x - m_cameraPosition.x, 2) + pow(p.pos.z - m_cameraPosition.z, 2)) > m_spawnRadius)
 			{
-				printf("ohno");
 				p.pos -= m_cameraPosition;
 				p.pos.x *= -0.9f;
 				p.pos.z *= -0.9f;
@@ -116,12 +115,19 @@ glm::vec3 WeatherParticles::GetRandomPositionOnPlane(glm::vec3 _avgDirection)
 	float rndm = (static_cast<float> (rand()) / static_cast<float> (RAND_MAX));
 	float rndm2 = (static_cast<float> (rand()) / static_cast<float> (RAND_MAX));
 
-	float radius = rndm * m_spawnRadius;
-	float angle = rndm2 * m_pi * 2.0f;
-	glm::vec3 planePosition = glm::vec3(0.0f, 0.0f, 0.0f);
-	planePosition.x = glm::cos(angle) * radius;
-	planePosition.z = glm::sin(angle) * radius;
+	//float radius = rndm * m_spawnRadius;
+	//float angle = rndm2 * m_pi * 2.0f;
+	//glm::vec3 planePosition = glm::vec3(0.0f, 0.0f, 0.0f);
+	//planePosition.x = glm::cos(angle) * radius;
+	//planePosition.z = glm::sin(angle) * radius;
 	
+	float r = m_spawnRadius * sqrt(rndm);
+	float theta = rndm2 * 2.0f * m_pi;
+
+	glm::vec3 planePosition = glm::vec3(0.0f, 0.0f, 0.0f);
+	planePosition.x = glm::cos(theta) * r;
+	planePosition.z = glm::sin(theta) * r;
+
 	return planePosition;
 }
 glm::vec3 WeatherParticles::GetRandomSpreadDirection()
@@ -139,4 +145,20 @@ glm::vec3 WeatherParticles::GetRandomSpreadDirection()
 
 	glm::vec3 direction = glm::vec4(randomSpreadDirection, 1.0f);
 	return direction;
+}
+
+void WeatherParticles::MakeTextureParticles(std::shared_ptr<Texture> _tex)
+{
+	m_shaderProgram = getApplication()->GetResourceManager()->LoadFromResources<ShaderProgram>("weather_tex_shader");
+	m_particlesVA->SetParticleTexCoords();
+	m_shaderProgram->SetUniform("in_Texture", _tex);
+}
+void WeatherParticles::MakeMaskedParticles(std::shared_ptr<Texture> _tex)
+{
+	m_shaderProgram = getApplication()->GetResourceManager()->LoadFromResources<ShaderProgram>("weather_mask_shader");
+	m_particlesVA->SetParticleTexCoords();
+	m_shaderProgram->SetUniform("in_Texture", _tex);
+	m_shaderProgram->SetUniform("in_StartColor", m_startColour);
+	m_shaderProgram->SetUniform("in_EndColor", m_endColour);
+	m_shaderProgram->SetUniform("in_TotalLife", m_particleLife);
 }
