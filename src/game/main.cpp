@@ -98,10 +98,10 @@ int main(int argc, char *argv[])
 	/**
 	*Creates the floor of the stage
 	*/
-	wstd::shared_ptr<Entity> floor = application->MakeCube();
-	wfloor->GetComponent<Renderer>()->SetMaterial(application->GetResourceManager()->LoadFromResources<Material>("orange_mat"));
-	wfloor->GetTransform()->SetPos(glm::vec3(0.0f, -1.5f, 0.0f));
-	wfloor->GetTransform()->SetScale(glm::vec3(15.0f, 0.5f, 15.0f));
+	std::shared_ptr<Entity> floor = application->MakeCube();
+	floor->GetComponent<Renderer>()->SetMaterial(application->GetResourceManager()->LoadFromResources<Material>("orange_mat"));
+	floor->GetTransform()->SetPos(glm::vec3(0.0f, -1.5f, 0.0f));
+	floor->GetTransform()->SetScale(glm::vec3(15.0f, 0.5f, 15.0f));
 
 	//make billboard
 	std::shared_ptr<Entity> mimikyu = application->addEntity();
